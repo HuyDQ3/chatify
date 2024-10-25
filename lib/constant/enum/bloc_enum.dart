@@ -1,0 +1,1 @@
+enum BlocStatusType { initial, loading, success, failure }
