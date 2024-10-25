@@ -14,4 +14,5 @@ class TextConstant {
   static const String logout = "Đăng xuất";
   static const String confirmLogout = "Xác thực đăng xuất";
   static const String errorHappenedTryAgainLater = "Có lỗi, vui lòng thử lại sau";
+  static const String needToRegisterAnAccount = "Cần tạo tài khoản";
 }

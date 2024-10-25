@@ -2,6 +2,7 @@ import 'package:chatify/constant/enum/bloc_enum.dart';
 import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/model/info/login_info.dart';
 import 'package:chatify/res/button/chatify_elevated_button.dart';
+import 'package:chatify/res/button/chatify_text_button.dart';
 import 'package:chatify/utility/login/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,58 +38,82 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: formKey,
-        child: Container(
-          constraints: const BoxConstraints(
-            maxWidth: 500,
-            maxHeight: 750,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(TextConstant.login),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: accountController,
+      body: Center(
+        child: Form(
+          key: formKey,
+          child: Container(
+            constraints: const BoxConstraints(
+              maxWidth: 500,
+              maxHeight: 500,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all()
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(TextConstant.login),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: accountController,
+                        ),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: passwordController,
+                        ),
+                        const SizedBox(height: 8),
+                        BlocConsumer(
+                          bloc: loginBloc,
+                          builder: (context, state) {
+                            if (state is ChatifyLoginState &&
+                                state.status == BlocStatusType.loading) {
+                              isLoginLoading = true;
+                            } else {
+                              isLoginLoading = false;
+                            }
+                            return ChatifyElevatedButton(
+                              label: Text(TextConstant.login),
+                              onPressed: () {
+                                if (!isLoginLoading && formKey.currentState!.validate()) {
+                                  loginBloc?.add(ChatifyLoginEvent(
+                                      loginInfo: LoginInfo(
+                                        account: accountController.value.text,
+                                        password: passwordController.value.text,
+                                      )));
+                                }
+                              },
+                              isLoading: isLoginLoading,
+                            );
+                          },
+                          listener: (context, state) {
+                            if (state is ChatifyLoginState && state.status == BlocStatusType.failure) {
+                              var snackBar = SnackBar(content: Text(state.error ?? TextConstant.errorHappenedTryAgainLater));
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(TextConstant.needToRegisterAnAccount),
+                      const SizedBox(width: 8),
+                      ChatifyTextButton(label: const Text(TextConstant.register), onPressed: () {
+                      },),
+                    ],
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: passwordController,
-              ),
-              const SizedBox(height: 8),
-              BlocConsumer(
-                bloc: loginBloc,
-                builder: (context, state) {
-                  if (state is ChatifyLoginState &&
-                      state.status == BlocStatusType.loading) {
-                    isLoginLoading = true;
-                  } else {
-                    isLoginLoading = false;
-                  }
-                  return ChatifyElevatedButton(
-                    label: Text(TextConstant.login),
-                    onPressed: () {
-                      if (!isLoginLoading && formKey.currentState!.validate()) {
-                        loginBloc?.add(ChatifyLoginEvent(
-                            loginInfo: LoginInfo(
-                          account: accountController.value.text,
-                          password: passwordController.value.text,
-                        )));
-                      }
-                    },
-                    isLoading: isLoginLoading,
-                  );
-                },
-                listener: (context, state) {
-                  if (state is ChatifyLoginState && state.status == BlocStatusType.failure) {
-                    var snackBar = SnackBar(content: Text(state.error ?? TextConstant.errorHappenedTryAgainLater));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                },
-              ),
-              const SizedBox(height: 8),
-            ],
+            ),
           ),
         ),
       ),

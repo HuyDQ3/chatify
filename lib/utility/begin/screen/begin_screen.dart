@@ -40,14 +40,15 @@ class _BeginScreenState extends State<BeginScreen> {
             customNavigator.push(context, const LoginScreen());
           }
         },
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SplashWidget(),
-            SizedBox(height: 8),
-            Text(TextConstant.appName),
-          ],
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SplashWidget(),
+              SizedBox(height: 8),
+              Text(TextConstant.appName),
+            ],
+          ),
         ),
       ),
     );
