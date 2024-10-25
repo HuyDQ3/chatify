@@ -2,10 +2,11 @@ import 'package:chatify/res/progress_indicator/chatify_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 class ChatifyElevatedButton extends StatelessWidget {
-  const ChatifyElevatedButton({super.key, required this.label, this.onPressed, this.isLoading});
+  const ChatifyElevatedButton({super.key, required this.label, this.onPressed, this.isLoading, this.icon});
 
   final bool? isLoading;
   final Widget label;
+  final Widget? icon;
   final void Function()? onPressed;
 
   @override
@@ -13,7 +14,14 @@ class ChatifyElevatedButton extends StatelessWidget {
     if (isLoading ?? false) {
       return ElevatedButton.icon(
         onPressed: onPressed,
-        icon: loadingIcon(),
+        icon: SizedBox(width: 16, height: 16, child: loadingIcon()),
+        label: label,
+      );
+    }
+    if (icon != null) {
+      return ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: SizedBox(width: 16, height: 16, child: FittedBox(child: icon!)),
         label: label,
       );
     }
@@ -24,6 +32,6 @@ class ChatifyElevatedButton extends StatelessWidget {
   }
 
   Widget loadingIcon() {
-    return const ChatifyProgressIndicator();
+    return ChatifyProgressIndicator();
   }
 }

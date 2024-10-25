@@ -7,6 +7,6 @@ class ChatifyProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircularProgressIndicator(value: value);
+    return CircularProgressIndicator(color: Colors.white, value: value);
   }
 }

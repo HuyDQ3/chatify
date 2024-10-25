@@ -3,6 +3,8 @@ import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/model/info/login_info.dart';
 import 'package:chatify/res/button/chatify_elevated_button.dart';
 import 'package:chatify/res/button/chatify_text_button.dart';
+import 'package:chatify/service/navigation/custom_navigation.dart';
+import 'package:chatify/utility/home_page/screen/home_page_screen.dart';
 import 'package:chatify/utility/login/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,7 +80,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               isLoginLoading = false;
                             }
                             return ChatifyElevatedButton(
-                              label: Text(TextConstant.login),
+                              icon: const Icon(Icons.login),
+                              label: const Text(TextConstant.login),
                               onPressed: () {
                                 if (!isLoginLoading && formKey.currentState!.validate()) {
                                   loginBloc?.add(ChatifyLoginEvent(
@@ -93,8 +96,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           listener: (context, state) {
                             if (state is ChatifyLoginState && state.status == BlocStatusType.failure) {
-                              var snackBar = SnackBar(content: Text(state.error ?? TextConstant.errorHappenedTryAgainLater));
+                              var snackBar = SnackBar(duration: const Duration(seconds: 1), content: Text(state.error ?? TextConstant.errorHappenedTryAgainLater));
                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            }
+                            if (state is ChatifyLoginState && state.status == BlocStatusType.success) {
+                              customNavigator.push(context, HomePageScreen());
                             }
                           },
                         ),
