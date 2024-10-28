@@ -1,4 +1,4 @@
-import 'package:chatify/constant/enum/bloc_enum.dart';
+import 'package:chatify/constant/enum/bloc/bloc_enum.dart';
 import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/service/navigation/custom_navigation.dart';
 import 'package:chatify/utility/begin/bloc/begin_bloc.dart';

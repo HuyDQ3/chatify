@@ -35,7 +35,9 @@ class LoginRepo {
     AccountInfo? currentLoginAccount;
     try {
       await Future.delayed(const Duration(seconds: 1), () {
-        currentLoginAccount = accounts.firstWhere((element) => identical(element, loginInfo));
+        if (accounts.any((element) => loginInfo.isAuthenticated(element.loginInfo))) {
+          currentLoginAccount = accounts.firstWhere((element) => loginInfo.isAuthenticated(element.loginInfo));
+        }
       },);
     } catch (e, s) {
       logger.log(error: e, stackTrace: s);

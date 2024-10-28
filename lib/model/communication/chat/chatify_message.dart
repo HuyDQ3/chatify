@@ -1,5 +1,4 @@
-import 'package:chatify/constant/enum/message_status_type.dart';
-import 'package:chatify/constant/enum/message_type.dart';
+import 'package:chatify/constant/enum/chat/message_enum.dart';
 
 class ChatifyMessage {
   final String id;

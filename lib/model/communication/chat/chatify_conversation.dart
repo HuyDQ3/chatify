@@ -1,5 +1,5 @@
-import 'package:chatify/constant/enum/conversation_type.dart';
-import 'package:chatify/model/communication/message/chatify_message.dart';
+import 'package:chatify/constant/enum/chat/conversation_enum.dart';
+import 'package:chatify/model/communication/chat/chatify_message.dart';
 import 'package:chatify/model/info/personal_info.dart';
 
 class Conversation {

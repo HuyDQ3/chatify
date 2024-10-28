@@ -1,11 +1,16 @@
-import 'package:chatify/constant/enum/bloc_enum.dart';
+import 'package:chatify/constant/enum/bloc/bloc_enum.dart';
+import 'package:chatify/constant/enum/text_form_field/custom_text_form_field_enum.dart';
 import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/model/info/login_info.dart';
-import 'package:chatify/res/button/chatify_elevated_button.dart';
-import 'package:chatify/res/button/chatify_text_button.dart';
 import 'package:chatify/service/navigation/custom_navigation.dart';
 import 'package:chatify/utility/home_page/screen/home_page_screen.dart';
 import 'package:chatify/utility/login/bloc/login_bloc.dart';
+import 'package:chatify/widget/button/chatify_elevated_button.dart';
+import 'package:chatify/widget/button/chatify_text_button.dart';
+import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_input_border_setting.dart';
+import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_input_decoration_setting.dart';
+import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_setting.dart';
+import 'package:chatify/widget/text_form_field/widget/chatify_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,9 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
               maxWidth: 500,
               maxHeight: 500,
             ),
-            decoration: BoxDecoration(
-              border: Border.all()
-            ),
+            decoration: BoxDecoration(border: Border.all()),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -62,12 +65,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         const Text(TextConstant.login),
                         const SizedBox(height: 8),
-                        TextFormField(
-                          controller: accountController,
+                        ChatifyTextFormField(
+                          setting: ChatifyTextFormFieldSetting(
+                            TextFormFieldSettingType.account,
+                            controller: accountController,
+                          ),
                         ),
                         const SizedBox(height: 8),
-                        TextFormField(
-                          controller: passwordController,
+                        ChatifyTextFormField(
+                          setting: ChatifyTextFormFieldSetting(
+                            TextFormFieldSettingType.hidePassword,
+                            controller: passwordController,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         BlocConsumer(
@@ -83,23 +92,30 @@ class _LoginScreenState extends State<LoginScreen> {
                               icon: const Icon(Icons.login),
                               label: const Text(TextConstant.login),
                               onPressed: () {
-                                if (!isLoginLoading && formKey.currentState!.validate()) {
+                                if (!isLoginLoading &&
+                                    formKey.currentState!.validate()) {
                                   loginBloc?.add(ChatifyLoginEvent(
                                       loginInfo: LoginInfo(
-                                        account: accountController.value.text,
-                                        password: passwordController.value.text,
-                                      )));
+                                    account: accountController.value.text,
+                                    password: passwordController.value.text,
+                                  )));
                                 }
                               },
                               isLoading: isLoginLoading,
                             );
                           },
                           listener: (context, state) {
-                            if (state is ChatifyLoginState && state.status == BlocStatusType.failure) {
-                              var snackBar = SnackBar(duration: const Duration(seconds: 1), content: Text(state.error ?? TextConstant.errorHappenedTryAgainLater));
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            if (state is ChatifyLoginState &&
+                                state.status == BlocStatusType.failure) {
+                              var snackBar = SnackBar(
+                                  duration: const Duration(seconds: 1),
+                                  content: Text(state.error ??
+                                      TextConstant.errorHappenedTryAgainLater));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                             }
-                            if (state is ChatifyLoginState && state.status == BlocStatusType.success) {
+                            if (state is ChatifyLoginState &&
+                                state.status == BlocStatusType.success) {
                               customNavigator.push(context, HomePageScreen());
                             }
                           },
@@ -113,8 +129,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const Text(TextConstant.needToRegisterAnAccount),
                       const SizedBox(width: 8),
-                      ChatifyTextButton(label: const Text(TextConstant.register), onPressed: () {
-                      },),
+                      ChatifyTextButton(
+                        label: const Text(TextConstant.register),
+                        onPressed: () {},
+                      ),
                     ],
                   ),
                 ],

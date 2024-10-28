@@ -3,6 +3,7 @@ class TextConstant {
   static const String login = "Đăng nhập";
   static const String account = "Tài khoản";
   static const String enterAccount = "Nhập tài khoản";
+  static const String password = "Mật khẩu";
   static const String enterPassword = "Nhập mật khẩu";
   static const String confirmPassword = "Xác thực mật khẩu";
   static const String register = "Đăng ký";

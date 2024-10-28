@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chatify/constant/enum/bloc_enum.dart';
+import 'package:chatify/constant/enum/bloc/bloc_enum.dart';
 import 'package:chatify/model/info/account_info.dart';
 import 'package:chatify/model/info/login_info.dart';
 import 'package:chatify/service/error/custom_logger.dart';

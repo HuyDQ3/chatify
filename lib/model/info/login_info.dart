@@ -8,4 +8,8 @@ class LoginInfo extends Equatable {
 
   @override
   List<Object?> get props => [account, password];
+
+  bool isAuthenticated(LoginInfo? info) {
+    return identical(this, info);
+  }
 }

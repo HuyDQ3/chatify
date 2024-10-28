@@ -1,3 +1,10 @@
+enum MessageType {
+  text,
+  constantImage,
+  dynamicImage,
+  video,
+}
+
 enum SendingMessageStatusType {
   initial,
   loading,

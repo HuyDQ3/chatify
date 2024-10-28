@@ -1,4 +1,4 @@
-import 'package:chatify/res/progress_indicator/chatify_progress_indicator.dart';
+import 'package:chatify/widget/progress_indicator/chatify_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 class ChatifyTextButton extends StatelessWidget {
