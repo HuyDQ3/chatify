@@ -8,111 +8,78 @@ class ChatifyTextFormFieldSetting {
   TextFormFieldSettingType settingType;
   String? id;
   ChatifyTextFormFieldBloc? bloc;
-  ChatifyTextFormFieldInputBorderSetting? inputBorderSetting;
-  ChatifyTextFormFieldInputDecorationSetting? inputDecorationSetting;
-  bool? obscureText;
+  InputBorderType? inputBorderType;
+  // late ChatifyTextFormFieldInputBorderSetting inputBorderSetting;
+  InputDecorationType? inputDecorationType;
+  // late ChatifyTextFormFieldInputDecorationSetting inputDecorationSetting;
   TextEditingController? controller;
+  FocusNode? focusNode;
+  bool? obscureText;
 
   ChatifyTextFormFieldSetting(
     this.settingType, {
     this.id,
     this.controller,
     this.bloc,
-    this.inputBorderSetting,
+    this.focusNode,
+    this.inputBorderType,
+    this.inputDecorationType,
+    this.obscureText,
   }) {
-    inputDecorationSettingTrigger();
-  }
-
-  void inputDecorationSettingTrigger() {
-    blocTrigger();
-    switch (settingType) {
-      case TextFormFieldSettingType.account:
-        inputDecorationSetting =
-            ChatifyTextFormFieldInputDecorationSetting.account(bloc: bloc);
-      case TextFormFieldSettingType.showPassword:
-        inputDecorationSetting =
-            ChatifyTextFormFieldInputDecorationSetting.showPassword(bloc: bloc);
-      case TextFormFieldSettingType.hidePassword:
-        inputDecorationSetting =
-            ChatifyTextFormFieldInputDecorationSetting.hidePassword(bloc: bloc);
-    }
-    inputBorderTrigger();
-    obscureTextTrigger();
-  }
-
-  void blocTrigger() {
     bloc ??= ChatifyTextFormFieldBloc();
-  }
-
-  void inputBorderTrigger() {
-    inputBorderSetting ??= ChatifyTextFormFieldInputBorderSetting.normal;
-    inputDecorationSetting?.border = inputBorderSetting?.inputBorder;
-  }
-
-  void obscureTextTrigger() {
-    if (inputDecorationSetting?.inputDecorationType ==
-        InputDecorationType.hidePassword) {
+    focusNode ??= FocusNode();
+    if (inputDecorationType == InputDecorationType.hidePassword) {
       obscureText = true;
     } else {
       obscureText = false;
     }
   }
 
-  static ChatifyTextFormFieldSetting account({
-    ChatifyTextFormFieldBloc? bloc,
-    ChatifyTextFormFieldInputBorderSetting? inputBorder,
-  }) {
-    return ChatifyTextFormFieldSetting(
-      TextFormFieldSettingType.account,
-      bloc: bloc,
-      inputBorderSetting:
-          inputBorder ?? ChatifyTextFormFieldInputBorderSetting.normal,
-    );
-  }
+  // void initial() {
+  //   blocTrigger();
+  //   settingTrigger();
+  //   obscureTextTrigger();
+  // }
 
-  static ChatifyTextFormFieldSetting hidePassword({
-    ChatifyTextFormFieldBloc? bloc,
-    ChatifyTextFormFieldInputBorderSetting? inputBorder,
-  }) {
-    return ChatifyTextFormFieldSetting(
-      TextFormFieldSettingType.hidePassword,
-      bloc: bloc,
-      inputBorderSetting:
-          inputBorder ?? ChatifyTextFormFieldInputBorderSetting.normal,
-    );
-  }
+  // void settingTrigger() {
+  //   inputBorderSetting =
+  //       ChatifyTextFormFieldInputBorderSetting.getSettingByType(
+  //           inputBorderType);
+  //   switch (settingType) {
+  //     case TextFormFieldSettingType.account:
+  //       inputDecorationSetting =
+  //           ChatifyTextFormFieldInputDecorationSetting.getSettingByType(
+  //         InputDecorationType.account,
+  //         bloc: bloc,
+  //         inputBorderType: inputBorderType,
+  //       );
+  //     case TextFormFieldSettingType.showPassword:
+  //       inputDecorationSetting =
+  //           ChatifyTextFormFieldInputDecorationSetting.getSettingByType(
+  //         InputDecorationType.showPassword,
+  //         bloc: bloc,
+  //         inputBorderType: inputBorderType,
+  //       );
+  //     case TextFormFieldSettingType.hidePassword:
+  //       inputDecorationSetting =
+  //           ChatifyTextFormFieldInputDecorationSetting.getSettingByType(
+  //         InputDecorationType.hidePassword,
+  //         bloc: bloc,
+  //         inputBorderType: inputBorderType,
+  //       );
+  //   }
+  // }
 
-  static ChatifyTextFormFieldSetting showPassword({
-    ChatifyTextFormFieldBloc? bloc,
-    ChatifyTextFormFieldInputBorderSetting? inputBorder,
-  }) {
-    return ChatifyTextFormFieldSetting(
-      TextFormFieldSettingType.showPassword,
-      bloc: bloc,
-      inputBorderSetting:
-          inputBorder ?? ChatifyTextFormFieldInputBorderSetting.normal,
-    );
-  }
+  // void blocTrigger() {
+  //   bloc ??= ChatifyTextFormFieldBloc();
+  // }
+  //
 
-  static Map<TextFormFieldSettingType, ChatifyTextFormFieldSetting> values({
-    ChatifyTextFormFieldBloc? bloc,
-    ChatifyTextFormFieldInputBorderSetting? inputBorder,
-  }) {
-    return {
-      TextFormFieldSettingType.account: ChatifyTextFormFieldSetting.account(
-        bloc: bloc,
-        inputBorder: inputBorder,
-      ),
-      TextFormFieldSettingType.showPassword:
-          ChatifyTextFormFieldSetting.showPassword(
-        bloc: bloc,
-        inputBorder: inputBorder,
-      ),
-      TextFormFieldSettingType.hidePassword:
-          ChatifyTextFormFieldSetting.hidePassword(
-        bloc: bloc,
-        inputBorder: inputBorder,
-      ),
-    };
+  void obscureTextTrigger() {
+    if (inputDecorationType == InputDecorationType.hidePassword) {
+      obscureText = true;
+    } else {
+      obscureText = false;
+    }
   }
 }

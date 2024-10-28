@@ -1,4 +1,4 @@
-enum CustomInputBorderType {
+enum InputBorderType {
   normal,
 }
 

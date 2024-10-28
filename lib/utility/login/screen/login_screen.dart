@@ -116,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                             if (state is ChatifyLoginState &&
                                 state.status == BlocStatusType.success) {
-                              customNavigator.push(context, HomePageScreen());
+                              customNavigator.push(context, const HomePageScreen());
                             }
                           },
                         ),

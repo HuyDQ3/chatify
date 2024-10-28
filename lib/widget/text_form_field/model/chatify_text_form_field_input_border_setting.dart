@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ChatifyTextFormFieldInputBorderSetting {
   final String? id;
-  final CustomInputBorderType inputBorderType;
+  final InputBorderType inputBorderType;
   InputBorder? inputBorder;
 
   ChatifyTextFormFieldInputBorderSetting(this.inputBorderType, {
@@ -11,12 +11,14 @@ class ChatifyTextFormFieldInputBorderSetting {
     this.inputBorder,
   });
 
-  static ChatifyTextFormFieldInputBorderSetting get normal => ChatifyTextFormFieldInputBorderSetting(
-    CustomInputBorderType.normal,
-    inputBorder: const OutlineInputBorder(),
-  );
-
-  static Map<CustomInputBorderType, ChatifyTextFormFieldInputBorderSetting> get values => {
-    CustomInputBorderType.normal: ChatifyTextFormFieldInputBorderSetting.normal,
-  };
+  static ChatifyTextFormFieldInputBorderSetting getSettingByType(InputBorderType? type) {
+    switch (type) {
+      case InputBorderType.normal:
+      default:
+        return ChatifyTextFormFieldInputBorderSetting(
+          InputBorderType.normal,
+          inputBorder: const OutlineInputBorder(),
+        );
+    }
+  }
 }

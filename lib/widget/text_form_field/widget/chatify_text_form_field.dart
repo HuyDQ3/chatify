@@ -1,6 +1,7 @@
 import 'package:chatify/constant/enum/bloc/bloc_enum.dart';
 import 'package:chatify/constant/enum/text_form_field/custom_text_form_field_enum.dart';
 import 'package:chatify/widget/text_form_field/bloc/chatify_text_form_field_bloc.dart';
+import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_input_decoration_setting.dart';
 import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,16 +44,16 @@ class _ChatifyTextFormFieldState extends State<ChatifyTextFormField> {
         } else if (state is ChangeInputBorderSettingState &&
             state.status == BlocStatusType.success &&
             state.setting != null) {
-          setting?.inputBorderSetting = state.setting;
+          setting?.inputBorderType = state.setting!.inputBorderType;
         } else if (state is ChangeInputDecorationSettingState &&
             state.status == BlocStatusType.success &&
             state.setting != null) {
-          setting?.inputDecorationSetting = state.setting;
+          setting?.inputDecorationType = state.setting!.inputDecorationType;
         }
         setting?.obscureTextTrigger();
         return TextFormField(
           controller: setting?.controller,
-          decoration: setting?.inputDecorationSetting?.inputDecoration,
+          decoration: ChatifyTextFormFieldInputDecorationSetting.getSettingByType(setting?.inputDecorationType)?.inputDecoration,
           obscureText: setting?.obscureText ?? false,
         );
       },
