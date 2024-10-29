@@ -2,12 +2,11 @@ import 'package:chatify/constant/enum/text_form_field/custom_text_form_field_enu
 import 'package:flutter/material.dart';
 
 class ChatifyTextFormFieldInputBorderSetting {
-  final String? id;
   final InputBorderType inputBorderType;
   InputBorder? inputBorder;
 
-  ChatifyTextFormFieldInputBorderSetting(this.inputBorderType, {
-    this.id,
+  ChatifyTextFormFieldInputBorderSetting({
+    required this.inputBorderType,
     this.inputBorder,
   });
 
@@ -16,7 +15,7 @@ class ChatifyTextFormFieldInputBorderSetting {
       case InputBorderType.normal:
       default:
         return ChatifyTextFormFieldInputBorderSetting(
-          InputBorderType.normal,
+          inputBorderType: InputBorderType.normal,
           inputBorder: const OutlineInputBorder(),
         );
     }

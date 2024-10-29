@@ -6,15 +6,40 @@ import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_set
 import 'package:flutter/material.dart';
 
 class ChatifyTextFormFieldInputDecorationSetting {
-  InputDecorationType inputDecorationType;
+  final InputDecorationType inputDecorationType;
+  Widget? prefix, prefixIcon, suffix, suffixIcon;
+  // InputBorder? inputBorder;
   InputDecoration? inputDecoration;
-  String? id;
 
-  ChatifyTextFormFieldInputDecorationSetting(
-    this.inputDecorationType, {
-    this.id,
+  ChatifyTextFormFieldInputDecorationSetting({
+    required this.inputDecorationType,
+    // this.inputBorder,
     this.inputDecoration,
+    this.prefix,
+    this.prefixIcon,
+    this.suffix,
+    this.suffixIcon,
   });
+
+  static ChatifyTextFormFieldInputDecorationSetting get account {
+    return ChatifyTextFormFieldInputDecorationSetting(
+      inputDecorationType: InputDecorationType.account,
+      inputDecoration: const InputDecoration(
+        prefixIcon: Icon(Icons.account_box),
+        labelText: TextConstant.account,
+      ),
+    );
+  }
+
+  static ChatifyTextFormFieldInputDecorationSetting password({ChatifyTextFormFieldBloc? bloc}) {
+    return ChatifyTextFormFieldInputDecorationSetting(
+      inputDecorationType: InputDecorationType.account,
+      inputDecoration: const InputDecoration(
+        prefixIcon: Icon(Icons.account_box),
+        labelText: TextConstant.account,
+      ),
+    );
+  }
 
   static ChatifyTextFormFieldInputDecorationSetting? getSettingByType(
     InputDecorationType? type, {
