@@ -19,8 +19,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   var formKey = GlobalKey<FormState>();
-  var accountController = TextEditingController();
-  var passwordController = TextEditingController();
+  var accountController = TextEditingController(text: "huy");
+  var passwordController = TextEditingController(text: "huy123");
   LoginBloc? loginBloc;
   bool isLoginLoading = false;
   var isShowPassword = ValueNotifier<bool>(false);
