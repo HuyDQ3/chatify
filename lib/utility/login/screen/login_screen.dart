@@ -58,99 +58,143 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Expanded(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const Text(TextConstant.login),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: accountController,
-                          validator: AccountValidation.accountLoginValidation,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: TextConstant.account,
-                          ),
-                        ),
-                        // ChatifyTextFormField(
-                        //   setting: ChatifyTextFormFieldSetting(
-                        //     TextFormFieldSettingType.account,
-                        //     controller: accountController,
-                        //   ),
-                        // ),
-                        const SizedBox(height: 8),
-                        ValueListenableBuilder(
-                          valueListenable: isShowPassword,
-                          builder: (context, value, child) {
-                            Widget suffix;
-                            if (value) {
-                              suffix = const Icon(Icons.visibility);
-                            } else {
-                              suffix = const Icon(Icons.visibility_off);
-                            }
-                            return TextFormField(
-                              controller: passwordController,
-                              validator: AccountValidation.passwordLoginValidation,
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                labelText: TextConstant.password,
-                                suffixIcon: InkWell(
-                                  borderRadius: BorderRadius.circular(24),
-                                  onTap: () {
-                                    isShowPassword.value = !value;
-                                  },
-                                  child: suffix,
+                        const Flexible(child: Text(TextConstant.login)),
+                        Flexible(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextFormField(
+                                controller: accountController,
+                                validator:
+                                    AccountValidation.accountLoginValidation,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: TextConstant.account,
                                 ),
                               ),
-                              obscureText: !value,
-                            );
-                          },
-                        ),
-                        // ChatifyTextFormField(
-                        //   setting: ChatifyTextFormFieldSetting(
-                        //     TextFormFieldSettingType.hidePassword,
-                        //     controller: passwordController,
-                        //   ),
-                        // ),
-                        const SizedBox(height: 8),
-                        BlocConsumer(
-                          bloc: loginBloc,
-                          builder: (context, state) {
-                            if (state is ChatifyLoginState &&
-                                state.status == BlocStatusType.loading) {
-                              isLoginLoading = true;
-                            } else {
-                              isLoginLoading = false;
-                            }
-                            return ChatifyElevatedButton(
-                              icon: const Icon(Icons.login),
-                              label: const Text(TextConstant.login),
-                              onPressed: () {
-                                if (!isLoginLoading &&
-                                    formKey.currentState!.validate()) {
-                                  loginBloc?.add(ChatifyLoginEvent(
-                                      loginInfo: LoginInfo(
-                                    account: accountController.value.text,
-                                    password: passwordController.value.text,
-                                  )));
-                                }
-                              },
-                              isLoading: isLoginLoading,
-                            );
-                          },
-                          listener: (context, state) {
-                            if (state is ChatifyLoginState &&
-                                state.status == BlocStatusType.failure) {
-                              var snackBar = SnackBar(
-                                  duration: const Duration(seconds: 1),
-                                  content: Text(state.error ??
-                                      TextConstant.errorHappenedTryAgainLater));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            }
-                            if (state is ChatifyLoginState &&
-                                state.status == BlocStatusType.success) {
-                              customNavigator.push(context, const HomePageScreen());
-                            }
-                          },
+                              // ChatifyTextFormField(
+                              //   setting: ChatifyTextFormFieldSetting(
+                              //     TextFormFieldSettingType.account,
+                              //     controller: accountController,
+                              //   ),
+                              // ),
+                              const SizedBox(height: 16),
+                              ValueListenableBuilder(
+                                valueListenable: isShowPassword,
+                                builder: (context, value, child) {
+                                  Widget suffix;
+                                  if (value) {
+                                    suffix = const Icon(Icons.visibility);
+                                  } else {
+                                    suffix = const Icon(Icons.visibility_off);
+                                  }
+                                  return TextFormField(
+                                    controller: passwordController,
+                                    validator: AccountValidation
+                                        .passwordLoginValidation,
+                                    decoration: InputDecoration(
+                                      border: const OutlineInputBorder(),
+                                      labelText: TextConstant.password,
+                                      suffixIcon: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              isShowPassword.value = !value;
+                                            },
+                                            borderRadius: BorderRadius.circular(24),
+                                            child: Container(
+                                              width: 36,
+                                              height: 36,
+                                              child: suffix,
+                                            ),
+                                          ),
+                                          // Padding(
+                                          //   padding: const EdgeInsets.only(right: 4),
+                                          //   // child: InkWell(
+                                          //   //   // borderRadius: BorderRadius.circular(24),
+                                          //   //   onTap: () {
+                                          //   //     isShowPassword.value = !value;
+                                          //   //   },
+                                          //   //   child: suffix,
+                                          //   // ),
+                                          // ),
+                                        ],
+                                      ),
+                                    ),
+                                    obscureText: !value,
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              BlocConsumer(
+                                bloc: loginBloc,
+                                listener: (context, state) {
+                                  if (state is ChatifyLoginState &&
+                                      state.status == BlocStatusType.failure) {
+                                    var snackBar = SnackBar(
+                                        duration: const Duration(seconds: 1),
+                                        content: Text(state.error ??
+                                            TextConstant
+                                                .errorHappenedTryAgainLater));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                  if (state is ChatifyLoginState &&
+                                      state.status == BlocStatusType.success) {
+                                    customNavigator.push(
+                                      context,
+                                      const HomePageScreen(),
+                                    );
+                                  }
+                                },
+                                builder: (context, state) {
+                                  Widget loginIcon;
+                                  if (state is ChatifyLoginState &&
+                                      state.status == BlocStatusType.loading) {
+                                    isLoginLoading = true;
+                                    loginIcon = Transform.scale(scale: .5, child: const CircularProgressIndicator());
+                                  } else {
+                                    isLoginLoading = false;
+                                    loginIcon = const Icon(Icons.login);
+                                  }
+                                  return Material(
+                                    color: Colors.transparent,
+                                    shape: const CircleBorder(
+                                      side: BorderSide()
+                                    ),
+                                    child: InkWell(
+                                      customBorder: const CircleBorder(
+                                      ),
+                                      onTap: () {
+                                        if (!isLoginLoading &&
+                                            formKey.currentState!.validate()) {
+                                          loginBloc?.add(ChatifyLoginEvent(
+                                              loginInfo: LoginInfo(
+                                            account:
+                                                accountController.value.text,
+                                            password:
+                                                passwordController.value.text,
+                                          )));
+                                        }
+                                      },
+                                      child: Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border()
+                                        ),
+                                        child: loginIcon,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -161,9 +205,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const Text(TextConstant.needToRegisterAnAccount),
                       const SizedBox(width: 8),
-                      ChatifyTextButton(
-                        label: const Text(TextConstant.register),
+                      TextButton(
                         onPressed: () {},
+                        child: const Text(TextConstant.register),
                       ),
                     ],
                   ),

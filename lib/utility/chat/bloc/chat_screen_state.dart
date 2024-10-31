@@ -14,7 +14,7 @@ class GetConversationItems extends ChatScreenState {
   final String? error;
   final AccountInfo? accountInfo;
 
-  const GetConversationItems(this.type, {this.error, this.accountInfo})
+  const GetConversationItems(this.type, {this.error, this.accountInfo});
 
   @override
   List<Object?> get props => [type, error, accountInfo];
