@@ -10,6 +10,7 @@ class LoginInfo extends Equatable {
   List<Object?> get props => [account, password];
 
   bool isAuthenticated(LoginInfo? info) {
-    return identical(this, info);
+    return account?.compareTo(info?.account ?? "") == 0 &&
+        password?.compareTo(info?.password ?? "") == 0;
   }
 }

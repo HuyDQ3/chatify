@@ -6,14 +6,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ChatifyNormalTextFormField extends StatefulWidget {
   const ChatifyNormalTextFormField({
     super.key,
-    this.title,
-    this.chatifyTextFormFieldBloc,
+    // this.title,
+    // this.chatifyTextFormFieldBloc,
+    // this.formKey,
+    // this.controller,
+    // this.focusNode,
+    // this.obscureText,
     this.chatifyTextFormFieldSetting,
   });
 
-  final String? title;
-  final ChatifyTextFormFieldBloc? chatifyTextFormFieldBloc;
+  // final String? title;
+  // final ChatifyTextFormFieldBloc? chatifyTextFormFieldBloc;
   final ChatifyTextFormFieldSetting? chatifyTextFormFieldSetting;
+  // final GlobalKey<FormState>? formKey;
+  // final InputBorder? inputBorder;
+  // final InputDecoration? inputDecoration;
+  // final TextEditingController? controller;
+  // final FocusNode? focusNode;
+  // final bool? obscureText;
 
   @override
   State<ChatifyNormalTextFormField> createState() =>
@@ -22,20 +32,39 @@ class ChatifyNormalTextFormField extends StatefulWidget {
 
 class _ChatifyNormalTextFormFieldState
     extends State<ChatifyNormalTextFormField> {
-  String? title;
-  ChatifyTextFormFieldBloc? bloc;
+  // String? title;
   ChatifyTextFormFieldSetting? setting;
+  ChatifyTextFormFieldBloc? bloc;
+  GlobalKey<FormState>? formKey;
+  InputDecoration? inputDecoration;
+  // InputBorder? inputBorder;
+  TextEditingController? controller;
+  FocusNode? focusNode;
+  bool obscureText = false;
 
   @override
   void initState() {
     super.initState();
-    title = widget.title;
-    if (widget.chatifyTextFormFieldBloc != null) {
-      bloc = widget.chatifyTextFormFieldBloc;
+    // title = widget.chatifyTextFormFieldSetting?.title;
+    setting = widget.chatifyTextFormFieldSetting;
+    if (setting?.bloc != null) {
+      bloc = setting!.bloc;
     } else {
       bloc = ChatifyTextFormFieldBloc();
     }
-    setting = widget.chatifyTextFormFieldSetting;
+    formKey = setting?.formKey;
+    inputDecoration = setting?.inputDecoration;
+    // inputBorder = setting?.inputBorder;
+    controller = setting?.controller;
+    focusNode = setting?.focusNode;
+    obscureText = setting?.obscureText ?? false;
+  }
+
+  @override
+  void dispose() {
+    focusNode?.dispose();
+    controller?.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,7 +73,10 @@ class _ChatifyNormalTextFormFieldState
       bloc: bloc,
       builder: (context, state) {
         return TextFormField(
-          controller: ,
+          controller: controller,
+          focusNode: focusNode,
+          decoration: inputDecoration,
+          obscureText: obscureText,
         );
       },
     );

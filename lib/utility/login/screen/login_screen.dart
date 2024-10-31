@@ -1,16 +1,12 @@
 import 'package:chatify/constant/enum/bloc/bloc_enum.dart';
-import 'package:chatify/constant/enum/text_form_field/custom_text_form_field_enum.dart';
 import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/model/info/login_info.dart';
 import 'package:chatify/service/navigation/custom_navigation.dart';
 import 'package:chatify/utility/home_page/screen/home_page_screen.dart';
 import 'package:chatify/utility/login/bloc/login_bloc.dart';
+import 'package:chatify/validation/account_validation.dart';
 import 'package:chatify/widget/button/chatify_elevated_button.dart';
 import 'package:chatify/widget/button/chatify_text_button.dart';
-import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_input_border_setting.dart';
-import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_input_decoration_setting.dart';
-import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_setting.dart';
-import 'package:chatify/widget/text_form_field/widget/chatify_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var passwordController = TextEditingController();
   LoginBloc? loginBloc;
   bool isLoginLoading = false;
+  var isShowPassword = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -65,19 +62,54 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         const Text(TextConstant.login),
                         const SizedBox(height: 8),
-                        ChatifyTextFormField(
-                          setting: ChatifyTextFormFieldSetting(
-                            TextFormFieldSettingType.account,
-                            controller: accountController,
+                        TextFormField(
+                          controller: accountController,
+                          validator: AccountValidation.accountLoginValidation,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: TextConstant.account,
                           ),
                         ),
+                        // ChatifyTextFormField(
+                        //   setting: ChatifyTextFormFieldSetting(
+                        //     TextFormFieldSettingType.account,
+                        //     controller: accountController,
+                        //   ),
+                        // ),
                         const SizedBox(height: 8),
-                        ChatifyTextFormField(
-                          setting: ChatifyTextFormFieldSetting(
-                            TextFormFieldSettingType.hidePassword,
-                            controller: passwordController,
-                          ),
+                        ValueListenableBuilder(
+                          valueListenable: isShowPassword,
+                          builder: (context, value, child) {
+                            Widget suffix;
+                            if (value) {
+                              suffix = const Icon(Icons.visibility);
+                            } else {
+                              suffix = const Icon(Icons.visibility_off);
+                            }
+                            return TextFormField(
+                              controller: passwordController,
+                              validator: AccountValidation.passwordLoginValidation,
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                labelText: TextConstant.password,
+                                suffixIcon: InkWell(
+                                  borderRadius: BorderRadius.circular(24),
+                                  onTap: () {
+                                    isShowPassword.value = !value;
+                                  },
+                                  child: suffix,
+                                ),
+                              ),
+                              obscureText: !value,
+                            );
+                          },
                         ),
+                        // ChatifyTextFormField(
+                        //   setting: ChatifyTextFormFieldSetting(
+                        //     TextFormFieldSettingType.hidePassword,
+                        //     controller: passwordController,
+                        //   ),
+                        // ),
                         const SizedBox(height: 8),
                         BlocConsumer(
                           bloc: loginBloc,

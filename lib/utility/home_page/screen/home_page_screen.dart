@@ -1,4 +1,7 @@
+import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/model/info/account_info.dart';
+import 'package:chatify/utility/chat/screen/chat_screen.dart';
+import 'package:chatify/utility/setting/screen/setting_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomePageScreen extends StatefulWidget {
@@ -11,15 +14,44 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
+  List<BottomNavigationBarItem> items = [
+    BottomNavigationBarItem(
+      icon: Icon(Icons.chat),
+      label: TextConstant.chat,
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.settings),
+      label: TextConstant.setting,
+    ),
+  ];
+
+  List<Widget> widgetOptions = [
+    ChatScreen(),
+    SettingScreen(),
+  ];
+
+  int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [],
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      // ),
+      body: widgetOptions.elementAt(currentIndex),
       bottomNavigationBar: BottomNavigationBar(
-        items: [],
+        currentIndex: currentIndex,
+        items: items,
+        onTap: (value) {
+          setState(() {
+            currentIndex = value;
+          });
+        },
       ),
     );
   }
