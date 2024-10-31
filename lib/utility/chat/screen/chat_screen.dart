@@ -1,4 +1,5 @@
 import 'package:chatify/constant/text/text_constant.dart';
+import 'package:chatify/utility/chat/bloc/chat_screen_bloc.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -9,6 +10,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  ChatScreenBloc bloc = ChatScreenBloc();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -18,5 +18,7 @@ class TextConstant {
   static const String needToRegisterAnAccount = "Cần tạo tài khoản";
 
   static const String chat = "Nhắn tin";
+
   static const String setting = "Cài đặt";
+  static const String information = "Thông tin";
 }

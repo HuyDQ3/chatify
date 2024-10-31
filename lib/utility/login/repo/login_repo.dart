@@ -4,31 +4,9 @@ import 'package:chatify/model/info/personal_info.dart';
 import 'package:chatify/service/error/custom_logger.dart';
 
 class LoginRepo {
-  List<AccountInfo> accounts = [
-    AccountInfo(
-      loginInfo: const LoginInfo(
-        account: "huy",
-        password: "huy123",
-      ),
-      personalInfo: PersonalInfo(
-        name: "diep quang huy",
-        dateOfBirth: DateTime(1999, DateTime.may, 20),
-        phoneNumber: "0942159066",
-        address: "ha dong - ha noi",
-      ),
-    ),
-    AccountInfo(
-      loginInfo: const LoginInfo(
-        account: "nghia",
-        password: "nghia465",
-      ),
-      personalInfo: PersonalInfo(
-        name: "nguyen tuan nghia",
-        dateOfBirth: DateTime(1999, DateTime.january, 1),
-        phoneNumber: "0912111222",
-        address: "my dinh - ha noi",
-      ),
-    ),
+  static List<AccountInfo> accounts = [
+    AccountInfo.huy,
+    AccountInfo.nghia,
   ];
 
   Future<AccountInfo?> login(LoginInfo loginInfo) async {
