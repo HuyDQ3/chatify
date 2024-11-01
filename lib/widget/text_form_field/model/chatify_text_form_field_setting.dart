@@ -1,8 +1,4 @@
-import 'package:chatify/constant/enum/text_form_field/custom_text_form_field_enum.dart';
-import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/widget/text_form_field/bloc/chatify_text_form_field_bloc.dart';
-import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_input_border_setting.dart';
-import 'package:chatify/widget/text_form_field/model/chatify_text_form_field_input_decoration_setting.dart';
 import 'package:flutter/material.dart';
 
 class ChatifyTextFormFieldSetting {

@@ -1,6 +1,6 @@
 import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/model/info/account_info.dart';
-import 'package:chatify/utility/chat/screen/chat_screen.dart';
+import 'package:chatify/utility/chat/conversation/screen/chat_screen.dart';
 import 'package:chatify/utility/setting/screen/setting_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,19 +15,19 @@ class HomePageScreen extends StatefulWidget {
 
 class _HomePageScreenState extends State<HomePageScreen> {
   List<BottomNavigationBarItem> items = [
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.chat),
       label: TextConstant.chat,
     ),
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.settings),
       label: TextConstant.setting,
     ),
   ];
 
   List<Widget> widgetOptions = [
-    ChatScreen(),
-    SettingScreen(),
+    const ChatScreen(),
+    const SettingScreen(),
   ];
 
   int currentIndex = 0;

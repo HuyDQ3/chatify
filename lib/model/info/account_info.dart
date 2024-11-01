@@ -12,6 +12,8 @@ class AccountInfo {
     required this.personalInfo,
   });
 
+  static AccountInfo? currentLoginAccount;
+
   static AccountInfo get huy {
     return AccountInfo(
       id: "acc0",
@@ -44,5 +46,9 @@ class AccountInfo {
         address: "my dinh - ha noi",
       ),
     );
+  }
+
+  bool isCurrentLoginAccount(String personalId) {
+    return personalInfo.id.compareTo(personalId) == 0;
   }
 }

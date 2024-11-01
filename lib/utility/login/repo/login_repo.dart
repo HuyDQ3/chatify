@@ -1,6 +1,5 @@
 import 'package:chatify/model/info/account_info.dart';
 import 'package:chatify/model/info/login_info.dart';
-import 'package:chatify/model/info/personal_info.dart';
 import 'package:chatify/service/error/custom_logger.dart';
 
 class LoginRepo {
@@ -10,16 +9,27 @@ class LoginRepo {
   ];
 
   Future<AccountInfo?> login(LoginInfo loginInfo) async {
-    AccountInfo? currentLoginAccount;
+    AccountInfo? currentAccount;
     try {
       await Future.delayed(const Duration(seconds: 1), () {
         if (accounts.any((element) => loginInfo.isAuthenticated(element.loginInfo))) {
-          currentLoginAccount = accounts.firstWhere((element) => loginInfo.isAuthenticated(element.loginInfo));
+          currentAccount = accounts.firstWhere((element) => loginInfo.isAuthenticated(element.loginInfo));
+          AccountInfo.currentLoginAccount = currentAccount;
         }
       },);
     } catch (e, s) {
       logger.log(error: e, stackTrace: s);
     }
-    return currentLoginAccount;
+    return currentAccount;
+  }
+
+  Future<void> logout() async {
+    try {
+      await Future.delayed(const Duration(seconds: 1), () {
+        AccountInfo.currentLoginAccount = null;
+      },);
+    } catch (e, s) {
+      logger.log(error: e, stackTrace: s);
+    }
   }
 }

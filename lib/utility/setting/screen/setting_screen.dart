@@ -20,6 +20,7 @@ class _ChatScreenState extends State<SettingScreen> {
         onTap: () {},
         title: Text(TextConstant.information),
         leading: Icon(Icons.info),
+        subtitle: Text(TextConstant.informationDetail),
       ),
       ListTile(
         onTap: () {
@@ -29,6 +30,7 @@ class _ChatScreenState extends State<SettingScreen> {
         },
         title: Text(TextConstant.logout),
         leading: Icon(Icons.logout),
+        subtitle: Text(TextConstant.logoutDetail),
       ),
     ];
   }

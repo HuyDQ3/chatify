@@ -4,7 +4,7 @@ class ChatifyMessage {
   final String id;
   final String conversationId;
   final String senderId;
-  final String? receiverId;
+  final List<String>? receiverId;
   final MessageType type;
   final SendingMessageStatusType sendingStatusType;
   final ReceivingMessageStatusType receivingStatusType;

@@ -5,8 +5,6 @@ import 'package:chatify/service/navigation/custom_navigation.dart';
 import 'package:chatify/utility/home_page/screen/home_page_screen.dart';
 import 'package:chatify/utility/login/bloc/login_bloc.dart';
 import 'package:chatify/validation/account_validation.dart';
-import 'package:chatify/widget/button/chatify_elevated_button.dart';
-import 'package:chatify/widget/button/chatify_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -105,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               isShowPassword.value = !value;
                                             },
                                             borderRadius: BorderRadius.circular(24),
-                                            child: Container(
+                                            child: SizedBox(
                                               width: 36,
                                               height: 36,
                                               child: suffix,
