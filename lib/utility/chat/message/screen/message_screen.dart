@@ -1,3 +1,4 @@
+import 'package:chatify/constant/enum/bloc/bloc_enum.dart';
 import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/model/chat/chatify_conversation.dart';
 import 'package:chatify/model/chat/chatify_message.dart';
@@ -22,8 +23,8 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   late ChatifyConversation? conversation;
   late MessageBloc bloc;
-
   late String title;
+  TextEditingController inputBarController = TextEditingController();
 
   @override
   void initState() {
@@ -35,6 +36,10 @@ class _MessageScreenState extends State<MessageScreen> {
       logger.log(error: e, stackTrace: s);
       bloc = MessageBloc();
     }
+    if (conversation != null) {
+      bloc.repo.chatifyConversation =
+          ChatifyConversation.copyWith(conversation!);
+    }
     title = conversation?.title ?? TextConstant.conversation;
   }
 
@@ -44,11 +49,80 @@ class _MessageScreenState extends State<MessageScreen> {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: BlocBuilder(
+      body: BlocConsumer<MessageBloc, MessageState>(
         bloc: bloc,
+        listener: (context, state) {},
         builder: (context, state) {
-          return messages(conversation?.messages);
+          if (state is SendMessageInputBarState &&
+              state.type == BlocStatusType.success) {
+            conversation = state.conversation;
+          }
+          return Column(
+            children: [
+              Expanded(
+                child: messages(conversation?.messages),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Expanded(child: inputBar(sendMessage)),
+                    const SizedBox.square(
+                      dimension: 8,
+                    ),
+                    sendMessageButton(sendMessage),
+                  ],
+                ),
+              ),
+            ],
+          );
         },
+      ),
+    );
+  }
+
+  sendMessage() {
+    if (conversation != null &&
+        AccountInfo.currentLoginAccount != null &&
+        inputBarController.value.text.isNotEmpty) {
+      var message = ChatifySendMessage(
+        conversationId: conversation!.id,
+        senderId: AccountInfo.currentLoginAccount!.id,
+        text: inputBarController.value.text,
+      );
+      bloc.add(SendMessageInputBar(message: message));
+      inputBarController.clear();
+    }
+  }
+
+  Widget sendMessageButton(VoidCallback? callback) {
+    return Material(
+      color: Colors.transparent,
+      shape: const CircleBorder(
+          // side: BorderSide()
+          ),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: callback,
+        child: Container(
+          width: 60,
+          height: 60,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            // border: Border()
+          ),
+          child: const Icon(Icons.send),
+        ),
+      ),
+    );
+  }
+
+  Widget inputBar(VoidCallback? sendMessage) {
+    return TextFormField(
+      controller: inputBarController,
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        hintText: TextConstant.messageHint,
       ),
     );
   }
@@ -113,7 +187,7 @@ class _MessageScreenState extends State<MessageScreen> {
           textBubbleMessage(message.text ?? ""),
         ],
       ),
-      trailing: CircleAvatar(
+      trailing: const CircleAvatar(
         child: Icon(Icons.person),
       ),
     );
@@ -121,7 +195,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget otherUserMessageItem(ChatifyMessage message) {
     return ListTile(
-      leading: CircleAvatar(
+      leading: const CircleAvatar(
         child: Icon(Icons.person),
       ),
       title: Row(
@@ -135,7 +209,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget textBubbleMessage(String text) {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         border: Border.all(),
       ),

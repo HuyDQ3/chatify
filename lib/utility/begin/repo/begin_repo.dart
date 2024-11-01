@@ -1,9 +1,11 @@
+import 'package:chatify/constant/chatify_app_constant.dart';
+
 class BeginRepo {
   Future<void> initial() async {
-    await Future.delayed(const Duration(seconds: 0));
+    await Future.delayed(Duration(milliseconds: ChatifyAppConstant.initialMilliSecond));
   }
 
   Future<void> downloadResource() async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: ChatifyAppConstant.loadingMilliSecond));
   }
 }

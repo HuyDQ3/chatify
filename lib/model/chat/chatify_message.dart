@@ -25,3 +25,19 @@ class ChatifyMessage {
     this.videoLinks,
   });
 }
+
+class ChatifySendMessage extends ChatifyMessage {
+  ChatifySendMessage({
+    required super.conversationId,
+    required super.senderId,
+    super.text,
+    super.imageLinks,
+    super.receiverId,
+    super.videoLinks,
+  }) : super(
+          id: '',
+          type: MessageType.none,
+          sendingStatusType: SendingMessageStatusType.none,
+          receivingStatusType: ReceivingMessageStatusType.none,
+        );
+}

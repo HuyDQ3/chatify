@@ -22,10 +22,23 @@ class ChatifyConversation {
     title ??= getConversationTitle();
   }
 
+  factory ChatifyConversation.copyWith(
+      ChatifyConversation chatifyConversation) {
+    return ChatifyConversation(
+      id: chatifyConversation.id,
+      type: chatifyConversation.type,
+      members: chatifyConversation.members,
+      messages: chatifyConversation.messages,
+    );
+  }
+
   String getConversationTitle() {
     String temp = TextConstant.conversation;
     List<String> memberNames = [];
-    members.removeWhere((element) => AccountInfo.currentLoginAccount?.isCurrentLoginAccount(element.personalInfo.id) ?? false);
+    members.removeWhere((element) =>
+        AccountInfo.currentLoginAccount
+            ?.isCurrentLoginAccount(element.personalInfo.id) ??
+        false);
     for (var member in members) {
       if (member.personalInfo.name != null) {
         memberNames.add(member.personalInfo.name!);

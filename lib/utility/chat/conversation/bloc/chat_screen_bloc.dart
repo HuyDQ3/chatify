@@ -28,7 +28,7 @@ class ChatScreenBloc extends Bloc<ChatScreenEvent, ChatScreenState> {
     try {
       emit(GetUserConversationsState(BlocStatusType.initial, accountInfo: event.accountInfo, conversations: conversations));
       emit(GetUserConversationsState(BlocStatusType.loading, accountInfo: event.accountInfo, conversations: conversations));
-      conversations = await repo.getUserConversations();
+      conversations = await repo.getAllConversations();
       emit(GetUserConversationsState(BlocStatusType.success, accountInfo: event.accountInfo, conversations: conversations));
     } catch (e, s) {
       logger.log(error: e, stackTrace: s);
@@ -44,7 +44,7 @@ class ChatScreenBloc extends Bloc<ChatScreenEvent, ChatScreenState> {
       if (event.conversationId == null || event.conversationId!.isEmpty) {
         throw Exception(TextConstant.idIsNotValid);
       }
-      conversation = await repo.getItemInConversations(event.conversationId!);
+      conversation = await repo.getConversation(event.conversationId!);
       emit(GoToMessageScreenState(BlocStatusType.success, conversationId: event.conversationId, conversation: conversation));
     } catch (e, s) {
       logger.log(error: e, stackTrace: s);

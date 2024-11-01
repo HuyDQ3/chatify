@@ -1,4 +1,5 @@
 enum MessageType {
+  none,
   text,
   constantImage,
   dynamicImage,
@@ -6,6 +7,7 @@ enum MessageType {
 }
 
 enum SendingMessageStatusType {
+  none,
   initial,
   loading,
   success,
@@ -13,6 +15,7 @@ enum SendingMessageStatusType {
 }
 
 enum ReceivingMessageStatusType {
+  none,
   initial,
   loading,
   success,
