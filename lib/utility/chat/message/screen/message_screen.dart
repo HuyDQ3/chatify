@@ -105,13 +105,13 @@ class _MessageScreenState extends State<MessageScreen> {
         customBorder: const CircleBorder(),
         onTap: callback,
         child: Container(
-          width: 60,
-          height: 60,
+          width: 48,
+          height: 48,
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
             // border: Border()
           ),
-          child: const Icon(Icons.send),
+          child: const Icon(Icons.send, color: Colors.blue,),
         ),
       ),
     );
@@ -120,9 +120,30 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget inputBar(VoidCallback? sendMessage) {
     return TextFormField(
       controller: inputBarController,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
         hintText: TextConstant.messageHint,
+        // prefixIcon: Padding(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: Row(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       BlocBuilder<MessageBloc, MessageState>(
+        //         bloc: bloc,
+        //         builder: (context, state) {
+        //           if (state is SendMessageInputBarState &&
+        //               state.type == BlocStatusType.loading) {
+        //             return const SizedBox.square(
+        //               dimension: 24,
+        //               child: CircularProgressIndicator(),
+        //             );
+        //           }
+        //           return const Icon(Icons.chat);
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ),
     );
   }
@@ -153,8 +174,9 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget emptyMessage() {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error, size: 48),
+          const Icon(Icons.message, size: 48),
           const SizedBox.square(dimension: 8),
           const Text(
             TextConstant.emptyMessage,
@@ -211,9 +233,13 @@ class _MessageScreenState extends State<MessageScreen> {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        border: Border.all(),
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.blue,
+        boxShadow: [
+          BoxShadow(color: Colors.grey, blurRadius: 2, offset: Offset(0, 4)),
+        ]
       ),
-      child: Text(text),
+      child: Text(text, style: TextStyle(color: Colors.white),),
     );
   }
 }

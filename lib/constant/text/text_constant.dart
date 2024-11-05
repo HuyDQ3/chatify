@@ -1,12 +1,17 @@
 class TextConstant {
   static const String appName = "Chatify";
   static const String login = "Đăng nhập";
+
   static const String account = "Tài khoản";
   static const String accountHint = "Nhập tài khoản";
+  static const String emptyAccount = "Tài khoản bị rỗng";
+
   static const String password = "Mật khẩu";
   static const String passwordHint = "Nhập mật khẩu";
+  static const String emptyPassword = "Mật khẩu bị rỗng";
   static const String confirmPassword = "Xác thực mật khẩu";
   static const String confirmPasswordHint = "Nhập mật khẩu để xác thực";
+
   static const String register = "Đăng ký";
   static const String forgotPassword = "Quên mật khẩu";
   static const String phoneNumber = "Số điện thoại";

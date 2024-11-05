@@ -38,10 +38,18 @@ dependencies:
   bloc: ^8.1.4
   equatable: ^2.0.5
   flutter_bloc: ^8.1.6
+  authentication_repository:
+    path: ./lib/package/authentication_repository
+  user_repository:
+    path: ./lib/package/user_repository
+  formz: ^0.7.0
+#  data_class: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mocktail: ^1.0.0
+  bloc_test: ^9.0.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

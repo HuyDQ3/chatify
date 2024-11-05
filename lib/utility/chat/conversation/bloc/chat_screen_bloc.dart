@@ -13,13 +13,15 @@ part 'chat_screen_event.dart';
 part 'chat_screen_state.dart';
 
 class ChatScreenBloc extends Bloc<ChatScreenEvent, ChatScreenState> {
-  ChatScreenBloc() : super(ChatScreenInitial()) {
+  ChatScreenBloc({String? test}) : super(ChatScreenInitial()) {
     on<ChatScreenEvent>((event, emit) {});
     // lay danh sach cuoc tro chuyen
     on<GetUserConversationsEvent>(_onGetConversationsEvent);
     // lay danh sach tin nhan bang id cuoc tro chuyen
     on<GoToMessageScreenEvent>(_onGetMessagesEvent);
   }
+
+  String? test;
 
   ChatRepo repo = ChatRepo();
 

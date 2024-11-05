@@ -3,38 +3,93 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:chatify/constant/enum/bloc/bloc_enum.dart';
 import 'package:chatify/model/info/account_info.dart';
-import 'package:chatify/model/info/login_info.dart';
+import 'package:chatify/package/authentication_repository/lib/authentication_repository.dart';
 import 'package:chatify/service/error/custom_logger.dart';
 import 'package:chatify/utility/login/repo/login_repo.dart';
 import 'package:equatable/equatable.dart';
+import 'package:formz/formz.dart';
+
+import '../login.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginInitial()) {
+  final AuthenticationRepository _authenticationRepository;
+
+  LoginBloc({
+    required AuthenticationRepository authenticationRepository,
+  })  : _authenticationRepository = authenticationRepository,
+        super(const LoginState()) {
     on<LoginEvent>((event, emit) {});
 
-    on<ChatifyLoginEvent>(_onChatifyLoginEvent);
+    // on<ChatifyLoginEvent>(_onChatifyLoginEvent);
+
+    on<LoginPasswordChanged>(_onLoginPasswordChanged);
+
+    on<LoginUsernameChanged>(_onLoginUsernameChanged);
+
+    on<LoginSubmitted>(_onLoginSubmitted);
+
+    on<LoginPasswordTextFieldHided>(_onLoginPasswordTextFieldHided);
+
+    on<LoginPasswordTextFieldShowed>(_onLoginPasswordTextFieldShowed);
   }
 
-  var loginRepo = LoginRepo();
+  // var loginRepo = LoginRepo();
 
-  Future<void> _onChatifyLoginEvent(ChatifyLoginEvent event, Emitter<LoginState> emit) async {
+  // Future<void> _onChatifyLoginEvent(ChatifyLoginEvent event, Emitter<LoginState> emit) async {
+  //   try {
+  //     emit(ChatifyLoginState(BlocStatusType.initial, loginInfo: event.loginInfo));
+  //     emit(ChatifyLoginState(BlocStatusType.loading, loginInfo: event.loginInfo));
+  //     AccountInfo? currentLoginAccount = await loginRepo.login(event.loginInfo!);
+  //     if (event.loginInfo != null && currentLoginAccount != null) {
+  //       emit(ChatifyLoginState(BlocStatusType.success, loginInfo: event.loginInfo, accountInfo: currentLoginAccount));
+  //     }
+  //     else {
+  //       emit(ChatifyLoginState(BlocStatusType.failure, loginInfo: event.loginInfo));
+  //     }
+  //   }
+  //   catch (e, s) {
+  //     emit(ChatifyLoginState(BlocStatusType.failure, loginInfo: event.loginInfo));
+  //     logger.log(error: e, stackTrace: s);
+  //   }
+  // }
+
+  Future<void> _onLoginPasswordChanged(
+      LoginPasswordChanged event, Emitter<LoginState> emit) async {
+    final password = Password.dirty(event.password);
+    final inputs = <FormzInput>[password, state.username];
+    emit(state.copyWith(password: password, isValid: Formz.validate(inputs)));
+  }
+
+  Future<void> _onLoginUsernameChanged(
+      LoginUsernameChanged event, Emitter<LoginState> emit) async {
+    final username = Username.dirty(event.username);
+    final inputs = <FormzInput>[state.password, username];
+    emit(state.copyWith(username: username, isValid: Formz.validate(inputs)));
+  }
+
+  Future<void> _onLoginSubmitted(
+      LoginSubmitted event, Emitter<LoginState> emit) async {
     try {
-      emit(ChatifyLoginState(BlocStatusType.initial, loginInfo: event.loginInfo));
-      emit(ChatifyLoginState(BlocStatusType.loading, loginInfo: event.loginInfo));
-      AccountInfo? currentLoginAccount = await loginRepo.login(event.loginInfo!);
-      if (event.loginInfo != null && currentLoginAccount != null) {
-        emit(ChatifyLoginState(BlocStatusType.success, loginInfo: event.loginInfo, accountInfo: currentLoginAccount));
+      if (state.isValid) {
+        emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+        await _authenticationRepository.logIn(
+            username: state.username.value, password: state.password.value);
+        emit(state.copyWith(status: FormzSubmissionStatus.success));
       }
-      else {
-        emit(ChatifyLoginState(BlocStatusType.failure, loginInfo: event.loginInfo));
-      }
-    }
-    catch (e, s) {
-      emit(ChatifyLoginState(BlocStatusType.failure, loginInfo: event.loginInfo));
+    } catch (e, s) {
       logger.log(error: e, stackTrace: s);
+      emit(state.copyWith(status: FormzSubmissionStatus.failure));
     }
+  }
+
+  Future<void> _onLoginPasswordTextFieldHided(LoginPasswordTextFieldHided event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(isPasswordShow: false));
+  }
+
+  Future<void> _onLoginPasswordTextFieldShowed(LoginPasswordTextFieldShowed event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(isPasswordShow: true));
   }
 }

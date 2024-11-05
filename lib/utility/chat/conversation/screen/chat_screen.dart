@@ -40,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
         title: const Text(TextConstant.chat),
         automaticallyImplyLeading: false,
       ),
-      body: BlocConsumer(
+      body: BlocConsumer<ChatScreenBloc, ChatScreenState>(
         bloc: bloc,
         listener: (context, state) async {
           if (state is GoToMessageScreenState &&
@@ -92,35 +92,35 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget failureConversationWidget() {
-    return Center(
-      child: Column(
-        children: [
-          const Icon(Icons.error, size: 48),
-          const SizedBox.square(dimension: 8),
-          const Text(
-            TextConstant.emptyConversation,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox.square(dimension: 8),
-          TextButton(
-            onPressed: () {
-              bloc?.add(const GetUserConversationsEvent());
-            },
-            child: const Text(TextConstant.tryAgain),
-          )
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(Icons.error, size: 48),
+        const SizedBox.square(dimension: 8),
+        const Text(
+          TextConstant.errorHappenedTryAgainLater,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox.square(dimension: 8),
+        TextButton(
+          onPressed: () {
+            bloc?.add(const GetUserConversationsEvent());
+          },
+          child: const Text(TextConstant.tryAgain),
+        )
+      ],
     );
   }
 
   Widget emptyConversationWidget() {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.message, size: 48),
           const SizedBox.square(dimension: 8),
           const Text(
-            TextConstant.errorHappenedTryAgainLater,
+            TextConstant.emptyConversation,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox.square(dimension: 8),
@@ -167,12 +167,12 @@ class _ChatScreenState extends State<ChatScreen> {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        item.messages.last.text ?? "",
+        item.messages.isNotEmpty ? item.messages.last.text ?? "" : "",
         overflow: TextOverflow.ellipsis,
       ),
       trailing: SizedBox.square(
         dimension: 24,
-        child: BlocBuilder(
+        child: BlocBuilder<ChatScreenBloc, ChatScreenState>(
           bloc: bloc,
           buildWhen: (previous, current) {
             return current is GoToMessageScreenState;
