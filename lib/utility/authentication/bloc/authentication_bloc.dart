@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chatify/package/authentication_repository/lib/authentication_repository.dart';
-import 'package:chatify/package/user_repository/lib/user_repository.dart';
+import 'package:authentication_repository/authentication_repository.dart';
+import 'package:user_repository/user_repository.dart';
 import 'package:equatable/equatable.dart';
 
 part 'authentication_event.dart';
@@ -58,8 +58,8 @@ class AuthenticationBloc
 
   Future<User?> _tryGetUser() async {
     try {
-      // final user = await _userRepository.getUser();
-      // return user;
+      final user = await _userRepository.getUser();
+      return user;
       return null;
     } catch (_) {
       return null;

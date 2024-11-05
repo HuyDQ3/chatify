@@ -1,5 +1,5 @@
-import 'package:chatify/package/authentication_repository/lib/authentication_repository.dart';
-import 'package:chatify/package/user_repository/lib/user_repository.dart';
+import 'package:authentication_repository/authentication_repository.dart';
+import 'package:user_repository/user_repository.dart';
 import 'package:chatify/utility/authentication/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +9,7 @@ import 'utility/home/view/home_page.dart';
 import 'utility/login/view/login_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

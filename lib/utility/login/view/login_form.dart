@@ -49,21 +49,31 @@ class _LoginFormState extends State<LoginForm> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Flexible(child: Text(TextConstant.login)),
-                        Expanded(
-                          child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _UsernameInput(),
-                              SizedBox.square()
-                              _PasswordInput(),
-                            ],
-                          ),
+                        // Flexible(child: Text(TextConstant.login)),
+                        Text(TextConstant.login),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _UsernameInput(),
+                            SizedBox(height: 16),
+                            _PasswordInput(),
+                          ],
                         ),
-                        _LoginButton(),
+                        // Expanded(
+                        //   child: Column(
+                        //     mainAxisAlignment: MainAxisAlignment.center,
+                        //     children: [
+                        //       _UsernameInput(),
+                        //       SizedBox(height: 16),
+                        //       _PasswordInput(),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
+                  SizedBox(height: 16),
+                  _LoginButton(),
                   SizedBox(height: 16),
                   _RegisterTitle(),
                 ],
