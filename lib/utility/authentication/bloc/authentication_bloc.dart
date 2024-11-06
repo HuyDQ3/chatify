@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:chatify/service/error/custom_logger.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:equatable/equatable.dart';
 
@@ -19,32 +20,65 @@ class AuthenticationBloc
   })  : _authenticationRepository = authenticationRepository,
         _userRepository = userRepository,
         super(const AuthenticationState.unknown()) {
+
     on<AuthenticationSubscriptionRequested>(_onSubscriptionRequested);
+
     on<AuthenticationLogoutPressed>(_onLogoutPressed);
   }
 
   Future<void> _onSubscriptionRequested(
       AuthenticationSubscriptionRequested event,
       Emitter<AuthenticationState> emit) async {
-    return emit.forEach(
+    // try {
+      // final value = await _tryGetUser();
+    //   _authenticationRepository.status.listen((event) async {
+    //     switch (event) {
+    //       case AuthenticationStatus.unknown:
+    //         emit(const AuthenticationState.unknown());
+    //         break;
+    //       case AuthenticationStatus.authenticated:
+    //         // if (value != null) {
+    //         //   emit(AuthenticationState.authenticated(value));
+    //         // } else {
+    //         //   emit(const AuthenticationState.unauthenticated());
+    //         // }
+    //         break;
+    //       case AuthenticationStatus.unauthenticated:
+    //         emit(const AuthenticationState.unauthenticated());
+    //         break;
+    //     }
+    //   });
+    // } catch (e, s) {
+    //   logger.log(error: e, stackTrace: s);
+    //   emit(const AuthenticationState.unknown());
+    // }
+
+    return emit.onEach(
       _authenticationRepository.status,
-      onData: (data) {
+      onData: (data) async {
         switch (data) {
           case AuthenticationStatus.unauthenticated:
-            return const AuthenticationState.unauthenticated();
+            return emit(const AuthenticationState.unauthenticated());
           case AuthenticationStatus.authenticated:
-            _tryGetUser().then((value) {
-              value != null
-                  ? AuthenticationState.authenticated(value)
-                  : const AuthenticationState.unauthenticated();
+            // final user = await _tryGetUser();
+            // if (user != null) {
+            //   return emit(AuthenticationState.authenticated(value));
+            // } else {
+            //   return emit(const AuthenticationState.unauthenticated());
+            // }
+            await _tryGetUser().then((value) {
+              if (value != null) {
+                return emit(AuthenticationState.authenticated(value));
+              } else {
+                return emit(const AuthenticationState.unauthenticated());
+              }
             });
           case AuthenticationStatus.unknown:
-            return const AuthenticationState.unknown();
+            return emit(const AuthenticationState.unknown());
         }
-        return const AuthenticationState.unknown();
       },
       onError: (error, stackTrace) {
-        return const AuthenticationState.unknown();
+        emit(const AuthenticationState.unknown());
       },
     );
   }
@@ -60,7 +94,6 @@ class AuthenticationBloc
     try {
       final user = await _userRepository.getUser();
       return user;
-      return null;
     } catch (_) {
       return null;
     }

@@ -2,7 +2,7 @@ part of 'login_bloc.dart';
 
 class LoginState extends Equatable {
   final FormzSubmissionStatus status;
-  final Username  username;
+  final Username username;
   final Password password;
   final bool isValid;
   final bool isPasswordShow;
@@ -17,7 +17,7 @@ class LoginState extends Equatable {
 
   LoginState copyWith({
     FormzSubmissionStatus? status,
-    Username?  username,
+    Username? username,
     Password? password,
     bool? isValid,
     bool? isPasswordShow,
@@ -32,7 +32,7 @@ class LoginState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, username, password, isValid, isPasswordShow];
+  List<Object?> get props => [status, username, password];
 }
 
 // final class LoginInitial extends LoginState {

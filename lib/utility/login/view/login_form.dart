@@ -498,13 +498,52 @@ class _LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isInProcessOrSuccess = context.select(
+            (LoginBloc bloc) => bloc.state.status.isInProgressOrSuccess);
+    final isValid = context.select((LoginBloc bloc) => bloc.state.isValid);
+    Widget loginIcon;
+    void Function()? login;
+    loginIcon = const Icon(Icons.login);
+    login = () {
+      if (isValid) {
+        context.read<LoginBloc>().add(LoginSubmitted());
+      }
+    };
+
+    return Material(
+      color: Colors.transparent,
+      shape: const CircleBorder(side: BorderSide()),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: login,
+        // onTap: () {
+        //   if (!isLoginLoading &&
+        //       formKey.currentState!.validate()) {
+        //     loginBloc?.add(ChatifyLoginEvent(
+        //         loginInfo: LoginInfo(
+        //           account: accountController.value.text,
+        //           password:
+        //           passwordController.value.text,
+        //         )));
+        //   }
+        // },
+        child: Container(
+          width: 60,
+          height: 60,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border(),
+          ),
+          child: loginIcon,
+        ),
+      ),
+    );
+
+
+
     return Builder(
       builder: (context) {
-        final isInProcessOrSuccess = context.select(
-            (LoginBloc bloc) => bloc.state.status.isInProgressOrSuccess);
-        final isValid = context.select((LoginBloc bloc) => bloc.state.isValid);
-        Widget loginIcon;
-        void Function()? login;
+
 
         if (isInProcessOrSuccess) {
           loginIcon = Transform.scale(

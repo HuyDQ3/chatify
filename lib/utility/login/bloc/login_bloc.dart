@@ -1,13 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chatify/constant/enum/bloc/bloc_enum.dart';
-import 'package:chatify/model/info/account_info.dart';
-import 'package:chatify/package/authentication_repository/lib/authentication_repository.dart';
 import 'package:chatify/service/error/custom_logger.dart';
-import 'package:chatify/utility/login/repo/login_repo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 
 import '../login.dart';
 
@@ -59,15 +56,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> _onLoginPasswordChanged(
       LoginPasswordChanged event, Emitter<LoginState> emit) async {
     final password = Password.dirty(event.password);
-    final inputs = <FormzInput>[password, state.username];
-    emit(state.copyWith(password: password, isValid: Formz.validate(inputs)));
+    // final inputs = <FormzInput>[password, state.username];
+    emit(state.copyWith(
+        password: password,
+        isValid: Formz.validate([password, state.username])));
   }
 
   Future<void> _onLoginUsernameChanged(
       LoginUsernameChanged event, Emitter<LoginState> emit) async {
     final username = Username.dirty(event.username);
-    final inputs = <FormzInput>[state.password, username];
-    emit(state.copyWith(username: username, isValid: Formz.validate(inputs)));
+    // final inputs = <FormzInput>[state.password, username];
+    emit(state.copyWith(
+        username: username,
+        isValid: Formz.validate([state.password, username])));
   }
 
   Future<void> _onLoginSubmitted(
@@ -76,7 +77,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (state.isValid) {
         emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
         await _authenticationRepository.logIn(
-            username: state.username.value, password: state.password.value);
+          username: state.username.value,
+          password: state.password.value,
+        );
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       }
     } catch (e, s) {
@@ -85,11 +88,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Future<void> _onLoginPasswordTextFieldHided(LoginPasswordTextFieldHided event, Emitter<LoginState> emit) async {
+  Future<void> _onLoginPasswordTextFieldHided(
+      LoginPasswordTextFieldHided event, Emitter<LoginState> emit) async {
     emit(state.copyWith(isPasswordShow: false));
   }
 
-  Future<void> _onLoginPasswordTextFieldShowed(LoginPasswordTextFieldShowed event, Emitter<LoginState> emit) async {
+  Future<void> _onLoginPasswordTextFieldShowed(
+      LoginPasswordTextFieldShowed event, Emitter<LoginState> emit) async {
     emit(state.copyWith(isPasswordShow: true));
   }
 }

@@ -42,6 +42,8 @@ dependencies:
     path: ./lib/package/authentication_repository
   user_repository:
     path: ./lib/package/user_repository
+  chat_repository:
+    path: ./lib/package/chat_repository
   formz: ^0.7.0
 #  data_class: any
 

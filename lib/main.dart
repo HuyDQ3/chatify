@@ -1,9 +1,10 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:user_repository/user_repository.dart';
-import 'package:chatify/utility/authentication/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chatify/utility/splash/spalsh.dart';
+import 'package:chatify/utility/authentication/authentication.dart';
+import 'package:chat_repository/chat_repository.dart';
 
 import 'utility/home/view/home_page.dart';
 import 'utility/login/view/login_page.dart';
@@ -23,26 +24,31 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late final AuthenticationRepository _authenticationRepository;
   late final UserRepository _userRepository;
+  late final ChatRepository _chatRepository;
 
   @override
   void initState() {
     super.initState();
     _authenticationRepository = AuthenticationRepository();
     _userRepository = UserRepository();
+    _chatRepository = ChatRepository();
   }
 
   @override
   void dispose() {
     _authenticationRepository.dispose();
+    _chatRepository.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
+      // value: _authenticationRepository,
       providers: [
         RepositoryProvider.value(value: _authenticationRepository),
         RepositoryProvider.value(value: _userRepository),
+        RepositoryProvider.value(value: _chatRepository),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -81,14 +87,15 @@ class _MyAppViewState extends State<MyAppView> {
           listener: (context, state) {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
-                _navigator.pushAndRemoveUntil(
+                _navigator.pushAndRemoveUntil<void>(
                   HomePage.route(),
                   (route) => false,
                 );
                 break;
               case AuthenticationStatus.unknown:
+                break;
               case AuthenticationStatus.unauthenticated:
-                _navigator.pushAndRemoveUntil(
+                _navigator.pushAndRemoveUntil<void>(
                   LoginPage.route(),
                   (route) => false,
                 );

@@ -1,1 +1,1 @@
-export 'package:chatify/utility/authentication/bloc/authentication_bloc.dart';
+export 'bloc/authentication_bloc.dart';
