@@ -60,7 +60,7 @@ class _MessageScreenState extends State<MessageScreen> {
           return Column(
             children: [
               Expanded(
-                child: messages(conversation?.messages),
+                child: messages(conversation?.listOfMessages),
               ),
               Padding(
                 padding: const EdgeInsets.all(8),

@@ -75,39 +75,39 @@ class ConversationLoadFailure extends ChatState {
 
 // tin nhan
 class MessengerLoadInitial extends ChatState {
-  final Messenger messenger;
+  final List<Messenger> messengers;
 
-  const MessengerLoadInitial(this.messenger);
+  const MessengerLoadInitial(this.messengers);
 
   @override
-  List<Object?> get props => [messenger];
+  List<Object?> get props => [messengers];
 }
 
 class MessengerLoadInProgress extends ChatState {
-  final Messenger messenger;
+  final List<Messenger> messengers;
 
-  const MessengerLoadInProgress(this.messenger);
+  const MessengerLoadInProgress(this.messengers);
 
   @override
-  List<Object?> get props => [messenger];
+  List<Object?> get props => [messengers];
 }
 
 class MessengerLoadSuccess extends ChatState {
-  final Messenger messenger;
+  final List<Messenger> messengers;
 
-  const MessengerLoadSuccess(this.messenger);
+  const MessengerLoadSuccess(this.messengers);
 
   @override
-  List<Object?> get props => [messenger];
+  List<Object?> get props => [messengers];
 }
 
 class MessengerLoadFailure extends ChatState {
-  final Messenger messenger;
+  final List<Messenger> messengers;
 
-  const MessengerLoadFailure(this.messenger);
+  const MessengerLoadFailure(this.messengers);
 
   @override
-  List<Object?> get props => [messenger];
+  List<Object?> get props => [messengers];
 }
 //
 

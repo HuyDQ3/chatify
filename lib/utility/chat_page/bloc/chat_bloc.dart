@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chatify/package/chat_repository/lib/chat_repository.dart' as chat_repository;
+import 'package:chatify/package/chat_repository/lib/chat_repository.dart'
+    as chat_repository;
 import 'package:chatify/service/error/custom_logger.dart';
 import 'package:equatable/equatable.dart';
 import 'package:chatify/model/chat/models.dart';
@@ -33,7 +34,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     return emit.onEach(
       _chatRepository.messageStatus,
       onData: (data) {
-        switch (MessageStatus.chatRepositorySendMessageStatusType(data.sendMessageStatusType)) {
+        switch (MessageStatus.chatRepositorySendMessageStatusType(
+            data.sendMessageStatusType)) {
           case SendMessageStatusType.none:
           case SendMessageStatusType.initial:
             emit(MessengerSendInitial(event.messenger));
@@ -47,9 +49,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           case SendMessageStatusType.failure:
             emit(MessengerSendFailure(event.messenger));
             break;
-
         }
-        switch (MessageStatus.chatRepositoryReceiveMessageStatusType(data.receiveMessageStatusType)) {
+        switch (MessageStatus.chatRepositoryReceiveMessageStatusType(
+            data.receiveMessageStatusType)) {
           case ReceiveMessageStatusType.none:
           case ReceiveMessageStatusType.initial:
             emit(MessengerReceiveInitial(event.messenger));
@@ -73,22 +75,29 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   Future<void> _onChatCrawled(
-      ChatCrawled event,
-      Emitter<ChatState> emit) async {
+      ChatCrawled event, Emitter<ChatState> emit) async {
     emit(ChatLoadInitial());
     emit(ChatLoadInProgress());
     await _chatRepository.crawlChatTest();
-    emit(ChatLoadSuccess(chat));
+    // List<Conversation> conversations = List.generate(_chatRepository.getAllConversations.length, (index) => Conversation.chatRepositoryConversation(_chatRepository.getAllConversations.elementAt(index)));
+    var chat = await _chatRepository.getAllMessagesAndConversations();
+    emit(ChatLoadSuccess(chat.map((key, value) => MapEntry(
+        Conversation.chatRepositoryConversation(key),
+        value
+            .map<Messenger>((e) => Messenger.chatRepositoryMessenger(e))
+            .toList()))));
   }
 
   Future<void> _onChatConversationTapped(
-      ChatConversationTapped event, Emitter<ChatState> emit) async {}
-
-  Future<void> _onChatConversationCrawled(ChatConversationCrawled event, Emitter<ChatState> emit) async {
-
+      ChatConversationTapped event, Emitter<ChatState> emit) async {
+    emit(ConversationLoadInitial(event.conversation));
+    emit(ConversationLoadInProgress(event.conversation));
+    // await _chatRepository.
   }
 
-  Future<void> _onChatMessageCrawled(ChatMessageCrawled event, Emitter<ChatState> emit) async {
+  Future<void> _onChatConversationCrawled(
+      ChatConversationCrawled event, Emitter<ChatState> emit) async {}
 
-  }
+  Future<void> _onChatMessageCrawled(
+      ChatMessageCrawled event, Emitter<ChatState> emit) async {}
 }

@@ -167,7 +167,7 @@ class _ChatScreenState extends State<ChatScreen> {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        item.messages.isNotEmpty ? item.messages.last.text ?? "" : "",
+        item.listOfMessages.isNotEmpty ? item.listOfMessages.last.text ?? "" : "",
         overflow: TextOverflow.ellipsis,
       ),
       trailing: SizedBox.square(

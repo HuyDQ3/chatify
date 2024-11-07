@@ -36,7 +36,7 @@ class ChatRepository {
     return temp;
   }
 
-  Future<Map<Conversation, List<Messenger>>> getAllMessagesAndConversations(Conversation conversation) async {
+  Future<Map<Conversation, List<Messenger>>> getAllMessagesAndConversations() async {
     return Map.from(_chat);
   }
 

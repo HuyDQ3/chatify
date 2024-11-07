@@ -17,7 +17,7 @@ class ChatRepo {
         AccountInfo.huy,
         AccountInfo.nghia,
       ],
-      messages: <ChatifyMessage>[
+      listOfMessages: <ChatifyMessage>[
         ChatifyMessage(
           id: "mes1",
           type: MessageType.text,
@@ -63,7 +63,7 @@ class ChatRepo {
         AccountInfo.huy,
         AccountInfo.nghia,
       ],
-      messages: <ChatifyMessage>[
+      listOfMessages: <ChatifyMessage>[
         ChatifyMessage(
           id: "mes1",
           type: MessageType.text,
@@ -133,7 +133,7 @@ class ChatRepo {
           messages = conversationItems
               .firstWhere(
                   (element) => element.id.compareTo(conversationId) == 0)
-              .messages;
+              .listOfMessages;
         }
       },
     );
@@ -153,7 +153,7 @@ class ChatRepo {
             conversationItems
                 .firstWhere(
                     (element) => element.id.compareTo(conversationId) == 0)
-                .messages
+                .listOfMessages
                 .add(chatifyMessage!);
           } else {
             throw Exception(TextConstant.conversationIdNotFound);

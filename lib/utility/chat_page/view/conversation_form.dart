@@ -67,7 +67,7 @@ class _ConversationFormState extends State<ConversationForm> {
             return loadingConversationWidget();
           }
           if (state is ChatLoadSuccess) {
-            return conversations(state.chat);
+            return conversations(state.chat.keys.toList());
           }
           if (state is ChatLoadFailure) {
             return failureConversationWidget();
