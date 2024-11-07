@@ -1,8 +1,11 @@
 import 'package:chatify/constant/text/text_constant.dart';
-import 'package:chatify/package/chat_repository/lib/chat_repository.dart' as chat_repository;
 import 'package:chatify/utility/chat_page/bloc/chat_bloc.dart';
+import 'package:chatify/utility/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:chat_repository/chat_repository.dart' as chat_repository;
+import 'package:user_repository/user_repository.dart' as user_repository;
 
 import '../../../model/chat/models.dart';
 
@@ -19,11 +22,21 @@ class ConversationForm extends StatefulWidget {
 
 class _ConversationFormState extends State<ConversationForm> {
   late chat_repository.ChatRepository chatRepository;
+  late user_repository.UserRepository userRepository;
+  late ChatBloc chatBloc;
+  late LoginBloc loginBloc;
+  User? user;
 
   @override
   void initState() {
     super.initState();
     chatRepository = context.read<chat_repository.ChatRepository>();
+    chatBloc = context.read<ChatBloc>();
+    loginBloc = context.read<LoginBloc>();
+    if (userRepository.user != null) {
+      user = User.userRepositoryUser(
+          userRepository.user!);
+    }
   }
 
   @override
@@ -47,25 +60,33 @@ class _ConversationFormState extends State<ConversationForm> {
         //   return current is GetUserConversationsState;
         // },
         builder: (context, state) {
-          if (state is ChatConversationsAndMessagesCrawled) {
-
+          if (state is ChatLoadInitial) {
+            return loadingConversationWidget();
           }
-          return conversations();
-          if (state is )
-
-          if (state is GetUserConversationsState &&
-              state.type == BlocStatusType.success) {
-            switch (state.type) {
-              case BlocStatusType.initial:
-              case BlocStatusType.loading:
-                loadingConversationWidget();
-              case BlocStatusType.success:
-                return conversations(state.conversations);
-              case BlocStatusType.failure:
-                return failureConversationWidget();
-            }
+          if (state is ChatLoadInProgress) {
+            return loadingConversationWidget();
+          }
+          if (state is ChatLoadSuccess) {
+            return conversations(state.conversations);
+          }
+          if (state is ChatLoadFailure) {
+            return failureConversationWidget();
           }
           return loadingConversationWidget();
+
+          // if (state is GetUserConversationsState &&
+          //     state.type == BlocStatusType.success) {
+          //   switch (state.type) {
+          //     case BlocStatusType.initial:
+          //     case BlocStatusType.loading:
+          //       loadingConversationWidget();
+          //     case BlocStatusType.success:
+          //       return conversations(state.conversations);
+          //     case BlocStatusType.failure:
+          //       return failureConversationWidget();
+          //   }
+          // }
+          // return loadingConversationWidget();
         },
       ),
       // body: BlocConsumer<ChatScreenBloc, ChatScreenState>(
@@ -114,6 +135,26 @@ class _ConversationFormState extends State<ConversationForm> {
   }
 
   Widget loadingConversationWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 64,
+          height: 64,
+          padding: const EdgeInsets.all(4),
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            chatBloc.add(ChatConversationsAndMessagesCrawled(user));
+          },
+          child: const Text(TextConstant.tryAgain),
+        )
+      ],
+    );
+
     return const Center(
       child: CircularProgressIndicator(),
     );
@@ -123,16 +164,24 @@ class _ConversationFormState extends State<ConversationForm> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(Icons.error, size: 48),
-        const SizedBox.square(dimension: 8),
-        const Text(
-          TextConstant.errorHappenedTryAgainLater,
-          overflow: TextOverflow.ellipsis,
+        Container(
+          width: 64,
+          height: 64,
+          padding: const EdgeInsets.all(4),
+          child: const Row(
+            children: [
+              Icon(Icons.error, size: 48),
+              SizedBox.square(dimension: 8),
+              Text(
+                TextConstant.errorHappenedTryAgainLater,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
-        const SizedBox.square(dimension: 8),
         TextButton(
           onPressed: () {
-            bloc?.add(const GetUserConversationsEvent());
+            chatBloc.add(ChatConversationsAndMessagesCrawled(user));
           },
           child: const Text(TextConstant.tryAgain),
         )
@@ -154,7 +203,7 @@ class _ConversationFormState extends State<ConversationForm> {
           const SizedBox.square(dimension: 8),
           TextButton(
             onPressed: () {
-              bloc?.add(const GetUserConversationsEvent());
+              chatBloc.add(ChatConversationsAndMessagesCrawled(user));
             },
             child: const Text(TextConstant.tryAgain),
           )
@@ -167,7 +216,7 @@ class _ConversationFormState extends State<ConversationForm> {
     return const CircularProgressIndicator();
   }
 
-  Widget conversationItem(ChatifyConversation item) {
+  Widget conversationItem(Conversation item) {
     Widget leading = const CircleAvatar(child: Icon(Icons.person));
     String title;
     if (item.title != null) {
@@ -187,7 +236,7 @@ class _ConversationFormState extends State<ConversationForm> {
     }
     return ListTile(
       onTap: () {
-        bloc?.add(GoToMessageScreenEvent(conversationId: item.id));
+        chatBloc.add(ChatConversationTapped(item));
       },
       leading: leading,
       title: Text(
@@ -195,22 +244,25 @@ class _ConversationFormState extends State<ConversationForm> {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        item.messages.isNotEmpty ? item.messages.last.text ?? "" : "",
+        item.nearestMessage?.text ?? "",
+        // item.messages.isNotEmpty ? item.messages.last.text ?? "" : "",
         overflow: TextOverflow.ellipsis,
       ),
       trailing: SizedBox.square(
         dimension: 24,
-        child: BlocBuilder<ChatScreenBloc, ChatScreenState>(
-          bloc: bloc,
+        child: BlocBuilder<ChatBloc, ChatState>(
           buildWhen: (previous, current) {
-            return current is GoToMessageScreenState;
+            return current is ConversationLoadInProgress || previous is ConversationLoadInProgress;
           },
           builder: (context, state) {
-            if (state is GoToMessageScreenState &&
-                state.type == BlocStatusType.loading &&
-                state.conversationId?.compareTo(item.id) == 0) {
+            if (state is ConversationLoadInProgress) {
               return loadingMessageWidget();
             }
+            // if (state is GoToMessageScreenState &&
+            //     state.type == BlocStatusType.loading &&
+            //     state.conversationId?.compareTo(item.id) == 0) {
+            //   return loadingMessageWidget();
+            // }
             return Container();
           },
         ),

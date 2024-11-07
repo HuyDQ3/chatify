@@ -28,8 +28,11 @@ class ConversationPage extends StatefulWidget {
 class _ConversationPageState extends State<ConversationPage> {
   @override
   Widget build(BuildContext context) {
-    User? user = User.userRepositoryUser(
-        context.read<user_repository.UserRepository>().user);
+    User? user;
+    if (context.read<user_repository.UserRepository>().user != null) {
+      user = User.userRepositoryUser(
+          context.read<user_repository.UserRepository>().user!);
+    }
 
     return MultiBlocProvider(
       providers: [

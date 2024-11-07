@@ -31,25 +31,35 @@ class User extends Equatable {
     return this.id.compareTo(id) == 0;
   }
 
-  static User? chatRepositoryUser(chat_repository.User? user) {
-    if (user != null) {
-      return User(
-        id: user.id,
-        loginInfo: LoginInfo.chatRepositoryLoginInfo(user.loginInfo),
-        personalInfo: PersonalInfo.chatRepositoryPersonalInfo(user.personalInfo),
-      );
-    }
-    return null;
+  static User chatRepositoryUser(chat_repository.User user) {
+    // if (user != null) {
+    //   return User(
+    //     id: user.id,
+    //     loginInfo: LoginInfo.chatRepositoryLoginInfo(user.loginInfo),
+    //     personalInfo: PersonalInfo.chatRepositoryPersonalInfo(user.personalInfo),
+    //   );
+    // }
+    // return null;
+    return User(
+      id: user.id,
+      loginInfo: LoginInfo.chatRepositoryLoginInfo(user.loginInfo),
+      personalInfo: PersonalInfo.chatRepositoryPersonalInfo(user.personalInfo),
+    );
   }
 
-  static User? userRepositoryUser(user_repository.User? user) {
-    if (user != null) {
-      return User(
-        id: user.id,
-        loginInfo: LoginInfo.userRepositoryLoginInfo(user.loginInfo),
-        personalInfo: PersonalInfo.userRepositoryPersonalInfo(user.personalInfo),
-      );
-    }
-    return null;
+  static User userRepositoryUser(user_repository.User user) {
+    // if (user != null) {
+    //   return User(
+    //     id: user.id,
+    //     loginInfo: LoginInfo.userRepositoryLoginInfo(user.loginInfo),
+    //     personalInfo: PersonalInfo.userRepositoryPersonalInfo(user.personalInfo),
+    //   );
+    // }
+    // return null;
+    return User(
+      id: user.id,
+      loginInfo: LoginInfo.userRepositoryLoginInfo(user.loginInfo),
+      personalInfo: PersonalInfo.userRepositoryPersonalInfo(user.personalInfo),
+    );
   }
 }
