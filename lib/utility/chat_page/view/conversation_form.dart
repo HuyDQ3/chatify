@@ -67,7 +67,7 @@ class _ConversationFormState extends State<ConversationForm> {
             return loadingConversationWidget();
           }
           if (state is ChatLoadSuccess) {
-            return conversations(state.conversations);
+            return conversations(state.chat);
           }
           if (state is ChatLoadFailure) {
             return failureConversationWidget();
@@ -148,7 +148,7 @@ class _ConversationFormState extends State<ConversationForm> {
         ),
         TextButton(
           onPressed: () {
-            chatBloc.add(ChatConversationsAndMessagesCrawled(user));
+            chatBloc.add(ChatCrawled(user));
           },
           child: const Text(TextConstant.tryAgain),
         )
@@ -181,7 +181,7 @@ class _ConversationFormState extends State<ConversationForm> {
         ),
         TextButton(
           onPressed: () {
-            chatBloc.add(ChatConversationsAndMessagesCrawled(user));
+            chatBloc.add(ChatCrawled(user));
           },
           child: const Text(TextConstant.tryAgain),
         )
@@ -203,7 +203,7 @@ class _ConversationFormState extends State<ConversationForm> {
           const SizedBox.square(dimension: 8),
           TextButton(
             onPressed: () {
-              chatBloc.add(ChatConversationsAndMessagesCrawled(user));
+              chatBloc.add(ChatCrawled(user));
             },
             child: const Text(TextConstant.tryAgain),
           )

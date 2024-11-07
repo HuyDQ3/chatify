@@ -4,10 +4,31 @@ sealed class ChatEvent extends Equatable {
   const ChatEvent();
 }
 
-class ChatConversationsAndMessagesCrawled extends ChatEvent {
+// lay tat ca chat
+class ChatCrawled extends ChatEvent {
   final User? user;
 
-  const ChatConversationsAndMessagesCrawled(this.user);
+  const ChatCrawled(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}
+
+// chi lay cuoc tro chuyen
+class ChatConversationCrawled extends ChatEvent {
+  final User? user;
+
+  const ChatConversationCrawled(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}
+
+// chi lay tin nhan
+class ChatMessageCrawled extends ChatEvent {
+  final User? user;
+
+  const ChatMessageCrawled(this.user);
 
   @override
   List<Object?> get props => [user];

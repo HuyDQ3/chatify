@@ -19,8 +19,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     on<ChatMessageSent>(_onChatMessageSent);
 
-    on<ChatConversationsAndMessagesCrawled>(
-        _onChatConversationsAndMessagesCrawled);
+    on<ChatCrawled>(_onChatCrawled);
+
+    on<ChatConversationCrawled>(_onChatConversationCrawled);
+
+    on<ChatMessageCrawled>(_onChatMessageCrawled);
 
     on<ChatConversationTapped>(_onChatConversationTapped);
   }
@@ -69,10 +72,23 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     );
   }
 
-  Future<void> _onChatConversationsAndMessagesCrawled(
-      ChatConversationsAndMessagesCrawled event,
-      Emitter<ChatState> emit) async {}
+  Future<void> _onChatCrawled(
+      ChatCrawled event,
+      Emitter<ChatState> emit) async {
+    emit(ChatLoadInitial());
+    emit(ChatLoadInProgress());
+    await _chatRepository.crawlChatTest();
+    emit(ChatLoadSuccess(chat));
+  }
 
   Future<void> _onChatConversationTapped(
       ChatConversationTapped event, Emitter<ChatState> emit) async {}
+
+  Future<void> _onChatConversationCrawled(ChatConversationCrawled event, Emitter<ChatState> emit) async {
+
+  }
+
+  Future<void> _onChatMessageCrawled(ChatMessageCrawled event, Emitter<ChatState> emit) async {
+
+  }
 }

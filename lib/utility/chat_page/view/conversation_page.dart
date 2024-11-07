@@ -44,7 +44,7 @@ class _ConversationPageState extends State<ConversationPage> {
         BlocProvider(
             create: (context) => ChatBloc(
                 chatRepository: context.read<chat_repository.ChatRepository>())
-              ..add(ChatConversationsAndMessagesCrawled(user))),
+              ..add(ChatCrawled(user))),
       ],
       child: const ConversationForm(),
     );

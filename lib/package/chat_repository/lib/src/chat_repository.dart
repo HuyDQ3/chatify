@@ -9,6 +9,8 @@ class ChatRepository {
     yield* _messageStatus.stream;
   }
 
+  Conversation? currentConversation;
+
   Map<Conversation, List<Messenger>> _chat = {};
 
   Future<void> crawlChatTest() async {

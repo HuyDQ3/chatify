@@ -9,7 +9,7 @@ final class ChatInitial extends ChatState {
   List<Object> get props => [];
 }
 
-// chat
+// lay ca tin nhan va cuoc tro chuyen
 class ChatLoadInitial extends ChatState {
   @override
   List<Object?> get props => [];
@@ -21,12 +21,12 @@ class ChatLoadInProgress extends ChatState {
 }
 
 class ChatLoadSuccess extends ChatState {
-  final List<Conversation> conversations;
+  final Map<Conversation, List<Messenger>> chat;
 
-  const ChatLoadSuccess(this.conversations);
+  const ChatLoadSuccess(this.chat);
 
   @override
-  List<Object?> get props => [conversations];
+  List<Object?> get props => [chat];
 }
 
 class ChatLoadFailure extends ChatState {
