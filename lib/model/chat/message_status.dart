@@ -1,4 +1,6 @@
-import 'package:chat_repository/src/models/models.dart';
+import 'models.dart';
+
+import 'package:chat_repository/chat_repository.dart' as chat_repository;
 
 enum SendMessageStatusType { none, initial, loading, success, failure }
 
@@ -25,9 +27,17 @@ class MessageStatus {
       : sendMessageStatusType = SendMessageStatusType.none,
         receiveMessageStatusType = ReceiveMessageStatusType.none;
 
-  MessageStatus.send({required this.message, this.conversation, required this.sendMessageStatusType})
-      : receiveMessageStatusType = ReceiveMessageStatusType.none;
+  static SendMessageStatusType chatRepositorySendMessageStatusType(chat_repository.SendMessageStatusType type) {
+    if (SendMessageStatusType.values.any((element) => element.name.compareTo(type.name) == 0)) {
+      return SendMessageStatusType.values.firstWhere((element) => element.name.compareTo(type.name) == 0);
+    }
+    return SendMessageStatusType.none;
+  }
 
-  MessageStatus.receive({required this.message, this.conversation, required this.receiveMessageStatusType})
-      : sendMessageStatusType = SendMessageStatusType.none;
+  static ReceiveMessageStatusType chatRepositoryReceiveMessageStatusType(chat_repository.ReceiveMessageStatusType type) {
+    if (ReceiveMessageStatusType.values.any((element) => element.name.compareTo(type.name) == 0)) {
+      return ReceiveMessageStatusType.values.firstWhere((element) => element.name.compareTo(type.name) == 0);
+    }
+    return ReceiveMessageStatusType.none;
+  }
 }

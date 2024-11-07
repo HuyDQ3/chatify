@@ -1,12 +1,46 @@
 import 'package:equatable/equatable.dart';
+import 'package:uuid/uuid.dart';
+
+import 'models.dart';
 
 class User extends Equatable {
-  const User(this.id);
+  String id;
+  LoginInfo loginInfo;
+  PersonalInfo personalInfo;
 
-  final String id;
+  User({required this.id, required this.loginInfo, required this.personalInfo});
+
+  User.huy()
+      : id = "huyID",
+        loginInfo = LoginInfo.huy(),
+        personalInfo = PersonalInfo.huy();
+
+  User.nghia()
+      : id = "nghiaID",
+        loginInfo = LoginInfo.nghia(),
+        personalInfo = PersonalInfo.nghia();
+
+  User.test()
+      : id = "test",
+        loginInfo = LoginInfo.test(),
+        personalInfo = PersonalInfo.test();
 
   @override
-  List<Object> get props => [id];
+  List<Object?> get props => [id, loginInfo, personalInfo];
 
-  static const empty = User('-');
+  bool isCurrentLoginAccount(String id) {
+    return this.id.compareTo(id) == 0;
+  }
+
+  User copyWith({
+    String? id,
+    PersonalInfo? personalInfo,
+    LoginInfo? loginInfo,
+  }) {
+    return User(
+      id: id ?? this.id,
+      personalInfo: personalInfo ?? this.personalInfo,
+      loginInfo: loginInfo ?? this.loginInfo,
+    );
+  }
 }

@@ -1,21 +1,28 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:chatify/package/chat_repository/lib/chat_repository.dart' as chat_repository;
+import 'package:chatify/service/error/custom_logger.dart';
 import 'package:equatable/equatable.dart';
-import 'package:chat_repository/chat_repository.dart';
+import 'package:chatify/model/chat/models.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-  final ChatRepository _chatRepository;
+  final chat_repository.ChatRepository _chatRepository;
 
-  ChatBloc({required ChatRepository chatRepository})
+  ChatBloc({required chat_repository.ChatRepository chatRepository})
       : _chatRepository = chatRepository,
         super(ChatInitial()) {
     on<ChatEvent>((event, emit) {});
 
     on<ChatMessageSent>(_onChatMessageSent);
+
+    on<ChatConversationsAndMessagesCrawled>(
+        _onChatConversationsAndMessagesCrawled);
+
+    on<ChatConversationTapped>(_onChatConversationTapped);
   }
 
   Future<void> _onChatMessageSent(
@@ -23,48 +30,49 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     return emit.onEach(
       _chatRepository.messageStatus,
       onData: (data) {
-        switch (data.sendingMessageStatusType) {
-          case SendingMessageStatusType.none:
-          case SendingMessageStatusType.initial:
-            emit(SendMessageInitialState(
-              messageId: event.message.id,
-              conversationId: event.message.conversationId,
-            ));
-          case SendingMessageStatusType.loading:
-            emit(SendMessageInProcessState(
-              messageId: event.message.id,
-              conversationId: event.message.conversationId,
-            ));
-          case SendingMessageStatusType.success:
-            emit(SendMessageSuccessState(
-              messageId: event.message.id,
-              conversationId: event.message.conversationId,
-            ));
-          case SendingMessageStatusType.failure:
-            emit(SendMessageFailureState(
-              messageId: event.message.id,
-              conversationId: event.message.conversationId,
-            ));
+        switch (MessageStatus.chatRepositorySendMessageStatusType(data.sendMessageStatusType)) {
+          case SendMessageStatusType.none:
+          case SendMessageStatusType.initial:
+            emit(MessengerSendInitial(event.messenger));
+            break;
+          case SendMessageStatusType.loading:
+            emit(MessengerSendInProgress(event.messenger));
+            break;
+          case SendMessageStatusType.success:
+            emit(MessengerSendSuccess(event.messenger));
+            break;
+          case SendMessageStatusType.failure:
+            emit(MessengerSendFailure(event.messenger));
+            break;
+
         }
-        switch (data.receivingMessageStatusType) {
-          case ReceivingMessageStatusType.none:
-          // TODO: Handle this case.
-          case ReceivingMessageStatusType.initial:
-          // TODO: Handle this case.
-          case ReceivingMessageStatusType.loading:
-          // TODO: Handle this case.
-          case ReceivingMessageStatusType.success:
-          // TODO: Handle this case.
-          case ReceivingMessageStatusType.failure:
-          // TODO: Handle this case.
+        switch (MessageStatus.chatRepositoryReceiveMessageStatusType(data.receiveMessageStatusType)) {
+          case ReceiveMessageStatusType.none:
+          case ReceiveMessageStatusType.initial:
+            emit(MessengerReceiveInitial(event.messenger));
+            break;
+          case ReceiveMessageStatusType.loading:
+            emit(MessengerReceiveInProgress(event.messenger));
+            break;
+          case ReceiveMessageStatusType.success:
+            emit(MessengerReceiveSuccess(event.messenger));
+            break;
+          case ReceiveMessageStatusType.failure:
+            emit(MessengerReceiveFailure(event.messenger));
+            break;
         }
       },
       onError: (error, stackTrace) {
-        emit(SendMessageFailureState(
-          messageId: event.message.id,
-          conversationId: event.message.conversationId,
-        ));
+        logger.log(error: error, stackTrace: stackTrace);
+        emit(MessengerSendFailure(event.messenger));
       },
     );
   }
+
+  Future<void> _onChatConversationsAndMessagesCrawled(
+      ChatConversationsAndMessagesCrawled event,
+      Emitter<ChatState> emit) async {}
+
+  Future<void> _onChatConversationTapped(
+      ChatConversationTapped event, Emitter<ChatState> emit) async {}
 }

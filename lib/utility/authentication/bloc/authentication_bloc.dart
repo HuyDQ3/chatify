@@ -19,7 +19,7 @@ class AuthenticationBloc
     required UserRepository userRepository,
   })  : _authenticationRepository = authenticationRepository,
         _userRepository = userRepository,
-        super(const AuthenticationState.unknown()) {
+        super(AuthenticationState.unknown()) {
 
     on<AuthenticationSubscriptionRequested>(_onSubscriptionRequested);
 
@@ -58,7 +58,7 @@ class AuthenticationBloc
       onData: (data) async {
         switch (data) {
           case AuthenticationStatus.unauthenticated:
-            return emit(const AuthenticationState.unauthenticated());
+            return emit(AuthenticationState.unauthenticated());
           case AuthenticationStatus.authenticated:
             // final user = await _tryGetUser();
             // if (user != null) {
@@ -70,15 +70,15 @@ class AuthenticationBloc
               if (value != null) {
                 return emit(AuthenticationState.authenticated(value));
               } else {
-                return emit(const AuthenticationState.unauthenticated());
+                return emit(AuthenticationState.unauthenticated());
               }
             });
           case AuthenticationStatus.unknown:
-            return emit(const AuthenticationState.unknown());
+            return emit(AuthenticationState.unknown());
         }
       },
       onError: (error, stackTrace) {
-        emit(const AuthenticationState.unknown());
+        emit(AuthenticationState.unknown());
       },
     );
   }

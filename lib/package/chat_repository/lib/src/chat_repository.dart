@@ -6,56 +6,71 @@ class ChatRepository {
   final _messageStatus = StreamController<MessageStatus>();
 
   Stream<MessageStatus> get messageStatus async* {
-    // await Future<void>.delayed(const Duration(seconds: 1));
     yield* _messageStatus.stream;
   }
 
-  Map<Conversation, List<Message>> conversations = {};
+  Map<Conversation, List<Messenger>> _chat = {};
 
-  Future<List<Conversation>> get getAllConversations async {
-    return conversations.keys.toList();
+  Future<void> crawlChatTest() async {
+    await Future.delayed(Duration(milliseconds: 350), () {
+      if (_chat.isEmpty) {
+        _chat = {
+          Conversation.test1(): Messenger.getTest1Messengers(),
+          Conversation.test2(): Messenger.getTest2Messengers(),
+        };
+      }
+    },);
   }
 
-  Future<Map<Conversation, List<Message>>> getAllMessages(
-      Conversation conversation) async {
-    var map = Map<Conversation, List<Message>>.from(conversations)
-      ..removeWhere((key, value) => key != conversation);
-    return map;
+  List<Conversation> get getAllConversations {
+    return _chat.keys.toList();
   }
 
-  Future<void> sendMessage(Message message) async {
+  Future<List<Messenger>> getMessagesFromConversation(Conversation conversation) async {
+    List<Messenger> temp = [];
+    if (_chat.containsKey(conversation)) {
+      temp = List.from(_chat[conversation]!);
+    }
+    return temp;
+  }
+
+  Future<Map<Conversation, List<Messenger>>> getAllMessagesAndConversations(Conversation conversation) async {
+    return Map.from(_chat);
+  }
+
+  Future<void> addMessageToChat(Messenger message) async {
     try {
-      if (conversations.keys.any(
+      if (_chat.keys.any(
           (element) => element.id.compareTo(message.conversationId) == 0)) {
-        var conversation = conversations.keys.firstWhere(
+        var conversation = _chat.keys.firstWhere(
             (element) => element.id.compareTo(message.conversationId) == 0);
         await Future.delayed(
           Duration(milliseconds: 300),
           () async {
-            _messageStatus.add(MessageStatus(
+            _messageStatus.add(MessageStatus.send(
               message: message,
               conversation: conversation,
-              sendingMessageStatusType: SendingMessageStatusType.initial,
+              sendMessageStatusType: SendMessageStatusType.initial,
             ));
-            _messageStatus.add(MessageStatus(
+            _messageStatus.add(MessageStatus.send(
               message: message,
               conversation: conversation,
-              sendingMessageStatusType: SendingMessageStatusType.loading,
+              sendMessageStatusType: SendMessageStatusType.loading,
             ));
           },
         );
-        conversations.update(
+        _chat.update(
           conversation,
-              (value) => [...conversations[conversation]!, message],
+              (value) => [..._chat[conversation]!, message],
           ifAbsent: () => [message],
         );
         await Future.delayed(
           Duration(milliseconds: 300),
           () {
-            _messageStatus.add(MessageStatus(
+            _messageStatus.add(MessageStatus.send(
               message: message,
               conversation: conversation,
-              sendingMessageStatusType: SendingMessageStatusType.success,
+              sendMessageStatusType: SendMessageStatusType.success,
             ));
           },
         );
@@ -64,9 +79,9 @@ class ChatRepository {
       }
     } catch (e, s) {
       print("$e\n$s");
-      _messageStatus.add(MessageStatus(
+      _messageStatus.add(MessageStatus.send(
         message: message,
-        sendingMessageStatusType: SendingMessageStatusType.failure,
+        sendMessageStatusType: SendMessageStatusType.failure,
       ));
     }
   }

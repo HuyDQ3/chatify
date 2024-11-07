@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import 'models.dart';
 
+import 'package:chat_repository/chat_repository.dart' as chat_repository;
+
 enum MessageType { none, text, image, video }
 
 class Messenger extends Equatable {
@@ -11,7 +13,7 @@ class Messenger extends Equatable {
   // final List<String>? receiverId;
   final MessageType type;
   SendMessageStatusType sendMessageStatusType;
-  ReceiveMessageStatusType receiveMessageStatusType;
+  ReceiveMessageStatusType receivingMessageStatusType;
   final String? text;
   final List<String>? imageLinks;
   final List<String>? videoLinks;
@@ -23,7 +25,7 @@ class Messenger extends Equatable {
     required this.senderId,
     // this.receiverId,
     required this.sendMessageStatusType,
-    required this.receiveMessageStatusType,
+    required this.receivingMessageStatusType,
     this.text,
     this.imageLinks,
     this.videoLinks,
@@ -39,7 +41,7 @@ class Messenger extends Equatable {
     this.imageLinks,
     this.videoLinks,
   })  : sendMessageStatusType = SendMessageStatusType.success,
-        receiveMessageStatusType = ReceiveMessageStatusType.success;
+        receivingMessageStatusType = ReceiveMessageStatusType.success;
 
   static List<Messenger> getTest1Messengers() => [
         Messenger.success(
@@ -111,9 +113,30 @@ class Messenger extends Equatable {
         senderId,
         // receiverId,
         sendMessageStatusType,
-        receiveMessageStatusType,
+        receivingMessageStatusType,
         text,
         imageLinks,
         videoLinks
       ];
+
+  static Messenger chatRepositoryMessenger(chat_repository.Messenger messenger) {
+    return Messenger(
+      id: messenger.id,
+      receivingMessageStatusType: MessageStatus.chatRepositoryReceiveMessageStatusType(messenger.receiveMessageStatusType),
+      sendMessageStatusType: MessageStatus.chatRepositorySendMessageStatusType(messenger.sendMessageStatusType),
+      conversationId: messenger.conversationId,
+      senderId: messenger.senderId,
+      type: chatRepositoryMessageType(messenger.type),
+      imageLinks: messenger.imageLinks,
+      videoLinks: messenger.videoLinks,
+      text: messenger.text,
+    );
+  }
+
+  static MessageType chatRepositoryMessageType(chat_repository.MessageType type) {
+    if (MessageType.values.any((element) => element.name.compareTo(type.name) == 0)) {
+      MessageType.values.firstWhere((element) => element.name.compareTo(type.name) == 0);
+    }
+    return MessageType.none;
+  }
 }
