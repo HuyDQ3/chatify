@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:chatify/service/error/custom_logger.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:authentication_repository/authentication_repository.dart';
+import 'package:authentication_repository/authentication_repository.dart' as authentication_repository;
 
 import '../login.dart';
 
@@ -12,10 +12,10 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final AuthenticationRepository _authenticationRepository;
+  final authentication_repository.AuthenticationRepository _authenticationRepository;
 
   LoginBloc({
-    required AuthenticationRepository authenticationRepository,
+    required authentication_repository.AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
         super(const LoginState()) {
     on<LoginEvent>((event, emit) {});

@@ -2,7 +2,7 @@ import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/model/chat/conversation.dart';
 import 'package:chatify/model/chat/models.dart';
 import 'package:chatify/package/chat_repository/lib/chat_repository.dart'
-    as chat_repository;
+as chat_repository;
 import 'package:chatify/utility/chat_page/bloc/chat_bloc.dart';
 import 'package:chatify/utility/login/login.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +23,7 @@ class _MessengerFormState extends State<MessengerForm> {
   late chat_repository.ChatRepository chatRepository;
   late LoginBloc loginBloc;
   late user_repository.UserRepository userRepository;
+
   // late String title;
   TextEditingController inputBarController = TextEditingController();
 
@@ -46,13 +47,13 @@ class _MessengerFormState extends State<MessengerForm> {
     chatRepository = context.read<chat_repository.ChatRepository>();
     userRepository = context.read<user_repository.UserRepository>();
     if (chatRepository.currentConversation != null) {
-      conversation = Conversation.chatRepositoryConversation(
+      conversation = Conversation.fromChatRepositoryConversation(
           chatRepository.currentConversation!);
     }
-    if (userRepository.user != null) {
-      chatBloc.add(ChatMessageCrawled(User.userRepositoryUser(userRepository.user!)));
-    }
-
+    // if (userRepository.user != null) {
+    //   chatBloc.add(
+    //       ChatMessageCrawled(User.fromUserRepositoryUser(userRepository.user!)));
+    // }
   }
 
   @override
@@ -69,12 +70,26 @@ class _MessengerFormState extends State<MessengerForm> {
       ),
       body: Column(
         children: [
-          Expanded(child: listOfMessages()),
+          Expanded(child: BlocBuilder<ChatBloc, ChatState>(
+            builder: (context, state) {
+              if (state is MessengerCrawlSuccess && state.messengers.isNotEmpty) {
+                return listOfMessages(state.messengers);
+              }
+              return emptyMessage();
+            },
+          )),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Row(
               children: [
-                Expanded(child: inputBar(sendMessage)),
+                Expanded(child: BlocListener<ChatBloc, ChatState>(
+                  listener: (context, state) {
+                    if (state is MessengerSendSuccess) {
+                      inputBarController.clear();
+                    }
+                  },
+                  child: inputBar(sendMessage),
+                )),
                 const SizedBox.square(
                   dimension: 8,
                 ),
@@ -100,7 +115,7 @@ class _MessengerFormState extends State<MessengerForm> {
     );
   }
 
-  sendMessage() {
+  void sendMessage() {
     if (conversation != null &&
         userRepository.user != null &&
         inputBarController.value.text.isNotEmpty) {
@@ -109,12 +124,11 @@ class _MessengerFormState extends State<MessengerForm> {
         type: MessageType.text,
         conversationId: conversation!.id,
         sendMessageStatusType: SendMessageStatusType.none,
-        receivingMessageStatusType: ReceiveMessageStatusType.none,
+        receiveMessageStatusType: ReceiveMessageStatusType.none,
         senderId: userRepository.user!.id,
         text: inputBarController.value.text,
       );
       chatBloc.add(ChatMessageSent(message));
-      inputBarController.clear();
     }
   }
 
@@ -122,8 +136,8 @@ class _MessengerFormState extends State<MessengerForm> {
     return Material(
       color: Colors.transparent,
       shape: const CircleBorder(
-          // side: BorderSide()
-          ),
+        // side: BorderSide()
+      ),
       child: InkWell(
         customBorder: const CircleBorder(),
         onTap: callback,
@@ -174,10 +188,29 @@ class _MessengerFormState extends State<MessengerForm> {
     );
   }
 
-  Widget listOfMessages() {
+  Widget listOfMessages(List<Messenger> messengers) {
+    Iterable<Messenger> reversedMessegers = messengers.reversed;
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return messageItem(
+          reversedMessegers.elementAt(index),
+          isCurrentLoginUser: userRepository.user?.id.compareTo(
+              reversedMessegers
+                  .elementAt(index)
+                  .senderId) ==
+              0,
+        );
+      },
+      // separatorBuilder: (context, index) {
+      //   return SizedBox.square(dimension: 8,);
+      // },
+      // padding: EdgeInsets.all(8),
+      reverse: true,
+      itemCount: reversedMessegers.length,
+    );
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
-        if (state is MessengerLoadSuccess) {
+        if (state is MessengerCrawlSuccess) {
           var messages = state.messengers;
           if (messages.isNotEmpty) {
             Iterable<Messenger> reversedMessages = messages.reversed;
@@ -186,7 +219,9 @@ class _MessengerFormState extends State<MessengerForm> {
                 return messageItem(
                   reversedMessages.elementAt(index),
                   isCurrentLoginUser: userRepository.user?.id.compareTo(
-                      reversedMessages.elementAt(index).senderId) ==
+                      reversedMessages
+                          .elementAt(index)
+                          .senderId) ==
                       0,
                 );
               },
@@ -266,11 +301,12 @@ class _MessengerFormState extends State<MessengerForm> {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.blue,
-          boxShadow: [
-            BoxShadow(color: Colors.grey, blurRadius: 2, offset: Offset(0, 4)),
-          ]),
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.blue,
+        boxShadow: [
+          BoxShadow(color: Colors.grey, blurRadius: 2, offset: Offset(0, 4)),
+        ],
+      ),
       child: Text(
         text,
         style: TextStyle(color: Colors.white),

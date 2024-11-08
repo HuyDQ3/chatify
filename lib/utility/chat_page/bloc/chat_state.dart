@@ -10,104 +10,92 @@ final class ChatInitial extends ChatState {
 }
 
 // lay ca tin nhan va cuoc tro chuyen
-class ChatLoadInitial extends ChatState {
+class ChatCrawlInitial extends ChatState {
   @override
   List<Object?> get props => [];
 }
 
-class ChatLoadInProgress extends ChatState {
+class ChatCrawlInProgress extends ChatState {
   @override
   List<Object?> get props => [];
 }
 
-class ChatLoadSuccess extends ChatState {
+class ChatCrawlSuccess extends ChatState {
   final Map<Conversation, List<Messenger>> chat;
 
-  const ChatLoadSuccess(this.chat);
+  const ChatCrawlSuccess(this.chat);
 
   @override
   List<Object?> get props => [chat];
 }
 
-class ChatLoadFailure extends ChatState {
+class ChatCrawlFailure extends ChatState {
   @override
   List<Object?> get props => [];
 }
 //
 
 // cuoc tro chuyen
-class ConversationLoadInitial extends ChatState {
-  final Conversation conversation;
-
-  const ConversationLoadInitial(this.conversation);
+class ConversationCrawlInitial extends ChatState {
+  const ConversationCrawlInitial();
 
   @override
-  List<Object?> get props => [conversation];
+  List<Object?> get props => [];
 }
 
-class ConversationLoadInProgress extends ChatState {
-  final Conversation conversation;
-
-  const ConversationLoadInProgress(this.conversation);
+class ConversationCrawlInProgress extends ChatState {
+  const ConversationCrawlInProgress();
 
   @override
-  List<Object?> get props => [conversation];
+  List<Object?> get props => [];
 }
 
-class ConversationLoadSuccess extends ChatState {
-  final Conversation conversation;
+class ConversationCrawlSuccess extends ChatState {
+  final List<Conversation> conversations;
 
-  const ConversationLoadSuccess(this.conversation);
+  const ConversationCrawlSuccess(this.conversations);
 
   @override
-  List<Object?> get props => [conversation];
+  List<Object?> get props => [conversations];
 }
 
-class ConversationLoadFailure extends ChatState {
-  final Conversation conversation;
-
-  const ConversationLoadFailure(this.conversation);
+class ConversationCrawlFailure extends ChatState {
+  const ConversationCrawlFailure();
 
   @override
-  List<Object?> get props => [conversation];
+  List<Object?> get props => [];
 }
 //
 
 // tin nhan
-class MessengerLoadInitial extends ChatState {
+class MessengerCrawlInitial extends ChatState {
+  const MessengerCrawlInitial();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class MessengerCrawlInProgress extends ChatState {
+  const MessengerCrawlInProgress();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class MessengerCrawlSuccess extends ChatState {
   final List<Messenger> messengers;
 
-  const MessengerLoadInitial(this.messengers);
+  const MessengerCrawlSuccess(this.messengers);
 
   @override
   List<Object?> get props => [messengers];
 }
 
-class MessengerLoadInProgress extends ChatState {
-  final List<Messenger> messengers;
-
-  const MessengerLoadInProgress(this.messengers);
+class MessengerCrawlFailure extends ChatState {
+  const MessengerCrawlFailure();
 
   @override
-  List<Object?> get props => [messengers];
-}
-
-class MessengerLoadSuccess extends ChatState {
-  final List<Messenger> messengers;
-
-  const MessengerLoadSuccess(this.messengers);
-
-  @override
-  List<Object?> get props => [messengers];
-}
-
-class MessengerLoadFailure extends ChatState {
-  final List<Messenger> messengers;
-
-  const MessengerLoadFailure(this.messengers);
-
-  @override
-  List<Object?> get props => [messengers];
+  List<Object?> get props => [];
 }
 //
 

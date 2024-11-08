@@ -13,7 +13,7 @@ class Messenger extends Equatable {
   // final List<String>? receiverId;
   final MessageType type;
   SendMessageStatusType sendMessageStatusType;
-  ReceiveMessageStatusType receivingMessageStatusType;
+  ReceiveMessageStatusType receiveMessageStatusType;
   final String? text;
   final List<String>? imageLinks;
   final List<String>? videoLinks;
@@ -25,7 +25,7 @@ class Messenger extends Equatable {
     required this.senderId,
     // this.receiverId,
     required this.sendMessageStatusType,
-    required this.receivingMessageStatusType,
+    required this.receiveMessageStatusType,
     this.text,
     this.imageLinks,
     this.videoLinks,
@@ -41,7 +41,7 @@ class Messenger extends Equatable {
     this.imageLinks,
     this.videoLinks,
   })  : sendMessageStatusType = SendMessageStatusType.success,
-        receivingMessageStatusType = ReceiveMessageStatusType.success;
+        receiveMessageStatusType = ReceiveMessageStatusType.success;
 
   static List<Messenger> getTest1Messengers() => [
         Messenger.success(
@@ -113,30 +113,51 @@ class Messenger extends Equatable {
         senderId,
         // receiverId,
         sendMessageStatusType,
-        receivingMessageStatusType,
+        receiveMessageStatusType,
         text,
         imageLinks,
         videoLinks
       ];
 
-  static Messenger chatRepositoryMessenger(chat_repository.Messenger messenger) {
+  static Messenger fromChatRepositoryMessenger(chat_repository.Messenger messenger) {
     return Messenger(
       id: messenger.id,
-      receivingMessageStatusType: MessageStatus.chatRepositoryReceiveMessageStatusType(messenger.receiveMessageStatusType),
-      sendMessageStatusType: MessageStatus.chatRepositorySendMessageStatusType(messenger.sendMessageStatusType),
+      receiveMessageStatusType: MessageStatus.fromChatRepositoryReceiveMessageStatusType(messenger.receiveMessageStatusType),
+      sendMessageStatusType: MessageStatus.fromChatRepositorySendMessageStatusType(messenger.sendMessageStatusType),
       conversationId: messenger.conversationId,
       senderId: messenger.senderId,
-      type: chatRepositoryMessageType(messenger.type),
+      type: fromChatRepositoryMessageType(messenger.type),
       imageLinks: messenger.imageLinks,
       videoLinks: messenger.videoLinks,
       text: messenger.text,
     );
   }
 
-  static MessageType chatRepositoryMessageType(chat_repository.MessageType type) {
+  static chat_repository.Messenger toChatRepositoryMessenger(Messenger messenger) {
+    return chat_repository.Messenger(
+      id: messenger.id,
+      receiveMessageStatusType: MessageStatus.toChatRepositoryReceiveMessageStatusType(messenger.receiveMessageStatusType),
+      sendMessageStatusType: MessageStatus.toChatRepositorySendMessageStatusType(messenger.sendMessageStatusType),
+      conversationId: messenger.conversationId,
+      senderId: messenger.senderId,
+      type: toChatRepositoryMessageType(messenger.type),
+      imageLinks: messenger.imageLinks,
+      videoLinks: messenger.videoLinks,
+      text: messenger.text,
+    );
+  }
+
+  static MessageType fromChatRepositoryMessageType(chat_repository.MessageType type) {
     if (MessageType.values.any((element) => element.name.compareTo(type.name) == 0)) {
       MessageType.values.firstWhere((element) => element.name.compareTo(type.name) == 0);
     }
     return MessageType.none;
+  }
+
+  static chat_repository.MessageType toChatRepositoryMessageType(MessageType type) {
+    if (chat_repository.MessageType.values.any((element) => element.name.compareTo(type.name) == 0)) {
+      chat_repository.MessageType.values.firstWhere((element) => element.name.compareTo(type.name) == 0);
+    }
+    return chat_repository.MessageType.none;
   }
 }

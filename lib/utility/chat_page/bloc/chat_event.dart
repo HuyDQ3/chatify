@@ -4,7 +4,7 @@ sealed class ChatEvent extends Equatable {
   const ChatEvent();
 }
 
-// lay tat ca chat
+// chat
 class ChatCrawled extends ChatEvent {
   final User? user;
 
@@ -13,8 +13,9 @@ class ChatCrawled extends ChatEvent {
   @override
   List<Object?> get props => [user];
 }
+//
 
-// chi lay cuoc tro chuyen
+// cuoc tro chuyen
 class ChatConversationCrawled extends ChatEvent {
   final User? user;
 
@@ -24,20 +25,21 @@ class ChatConversationCrawled extends ChatEvent {
   List<Object?> get props => [user];
 }
 
-// chi lay tin nhan
-class ChatMessageCrawled extends ChatEvent {
-  final User? user;
-
-  const ChatMessageCrawled(this.user);
-
-  @override
-  List<Object?> get props => [user];
-}
-
-class ChatConversationTapped extends ChatEvent {
+class ChatConversationPushToMessagePage extends ChatEvent {
   final Conversation conversation;
 
-  const ChatConversationTapped(this.conversation);
+  const ChatConversationPushToMessagePage(this.conversation);
+
+  @override
+  List<Object?> get props => [conversation];
+}
+//
+
+// tin nhan
+class ChatMessageCrawled extends ChatEvent {
+  final Conversation conversation;
+
+  const ChatMessageCrawled(this.conversation);
 
   @override
   List<Object?> get props => [conversation];
@@ -47,6 +49,15 @@ class ChatMessageSent extends ChatEvent {
   final Messenger messenger;
 
   const ChatMessageSent(this.messenger);
+
+  @override
+  List<Object?> get props => [messenger];
+}
+
+class ChatMessageReceived extends ChatEvent {
+  final Messenger messenger;
+
+  const ChatMessageReceived(this.messenger);
 
   @override
   List<Object?> get props => [messenger];

@@ -34,8 +34,7 @@ class _ConversationFormState extends State<ConversationForm> {
     chatBloc = context.read<ChatBloc>();
     loginBloc = context.read<LoginBloc>();
     if (userRepository.user != null) {
-      user = User.userRepositoryUser(
-          userRepository.user!);
+      user = User.fromUserRepositoryUser(userRepository.user!);
     }
   }
 
@@ -60,16 +59,16 @@ class _ConversationFormState extends State<ConversationForm> {
         //   return current is GetUserConversationsState;
         // },
         builder: (context, state) {
-          if (state is ChatLoadInitial) {
+          if (state is ChatCrawlInitial) {
             return loadingConversationWidget();
           }
-          if (state is ChatLoadInProgress) {
+          if (state is ChatCrawlInProgress) {
             return loadingConversationWidget();
           }
-          if (state is ChatLoadSuccess) {
+          if (state is ChatCrawlSuccess) {
             return conversations(state.chat.keys.toList());
           }
-          if (state is ChatLoadFailure) {
+          if (state is ChatCrawlFailure) {
             return failureConversationWidget();
           }
           return loadingConversationWidget();
@@ -151,7 +150,7 @@ class _ConversationFormState extends State<ConversationForm> {
             chatBloc.add(ChatCrawled(user));
           },
           child: const Text(TextConstant.tryAgain),
-        )
+        ),
       ],
     );
 
@@ -184,7 +183,7 @@ class _ConversationFormState extends State<ConversationForm> {
             chatBloc.add(ChatCrawled(user));
           },
           child: const Text(TextConstant.tryAgain),
-        )
+        ),
       ],
     );
   }
@@ -206,7 +205,7 @@ class _ConversationFormState extends State<ConversationForm> {
               chatBloc.add(ChatCrawled(user));
             },
             child: const Text(TextConstant.tryAgain),
-          )
+          ),
         ],
       ),
     );
@@ -236,7 +235,7 @@ class _ConversationFormState extends State<ConversationForm> {
     }
     return ListTile(
       onTap: () {
-        chatBloc.add(ChatConversationTapped(item));
+        chatBloc.add(ChatConversationPushToMessagePage(item));
       },
       leading: leading,
       title: Text(
@@ -252,10 +251,11 @@ class _ConversationFormState extends State<ConversationForm> {
         dimension: 24,
         child: BlocBuilder<ChatBloc, ChatState>(
           buildWhen: (previous, current) {
-            return current is ConversationLoadInProgress || previous is ConversationLoadInProgress;
+            return current is ConversationCrawlInProgress ||
+                previous is ConversationCrawlInProgress;
           },
           builder: (context, state) {
-            if (state is ConversationLoadInProgress) {
+            if (state is ConversationCrawlInProgress) {
               return loadingMessageWidget();
             }
             // if (state is GoToMessageScreenState &&

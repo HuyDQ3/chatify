@@ -32,7 +32,7 @@ class PersonalInfo extends Equatable {
   @override
   List<Object?> get props => [name, phoneNumber, address, dateOfBirth];
 
-  static PersonalInfo chatRepositoryPersonalInfo(chat_repository.PersonalInfo personalInfo) {
+  static PersonalInfo fromChatRepositoryPersonalInfo(chat_repository.PersonalInfo personalInfo) {
     return PersonalInfo(
       address: personalInfo.address,
       name: personalInfo.name,
@@ -41,8 +41,26 @@ class PersonalInfo extends Equatable {
     );
   }
 
-  static PersonalInfo userRepositoryPersonalInfo(user_repository.PersonalInfo personalInfo) {
+  static chat_repository.PersonalInfo toChatRepositoryPersonalInfo(PersonalInfo personalInfo) {
+    return chat_repository.PersonalInfo(
+      address: personalInfo.address,
+      name: personalInfo.name,
+      dateOfBirth: personalInfo.dateOfBirth,
+      phoneNumber: personalInfo.phoneNumber,
+    );
+  }
+
+  static PersonalInfo fromUserRepositoryPersonalInfo(user_repository.PersonalInfo personalInfo) {
     return PersonalInfo(
+      address: personalInfo.address,
+      name: personalInfo.name,
+      dateOfBirth: personalInfo.dateOfBirth,
+      phoneNumber: personalInfo.phoneNumber,
+    );
+  }
+
+  static user_repository.PersonalInfo toUserRepositoryPersonalInfo(PersonalInfo personalInfo) {
+    return user_repository.PersonalInfo(
       address: personalInfo.address,
       name: personalInfo.name,
       dateOfBirth: personalInfo.dateOfBirth,

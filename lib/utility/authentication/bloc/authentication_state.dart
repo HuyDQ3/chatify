@@ -2,19 +2,19 @@ part of 'authentication_bloc.dart';
 
 class AuthenticationState extends Equatable {
   AuthenticationState._({
-    this.status = AuthenticationStatus.unknown,
+    this.status = authentication_repository.AuthenticationStatus.unknown,
     User? user,
-  }) : _user = user ?? User.test();
+  }) : _user = user ?? User.fromUserRepositoryUser(user_repository.User.test());
 
   AuthenticationState.unknown() : this._();
 
   AuthenticationState.authenticated(User user)
-      : this._(status: AuthenticationStatus.authenticated, user: user);
+      : this._(status: authentication_repository.AuthenticationStatus.authenticated, user: user);
 
   AuthenticationState.unauthenticated()
-      : this._(status: AuthenticationStatus.unauthenticated);
+      : this._(status: authentication_repository.AuthenticationStatus.unauthenticated);
 
-  final AuthenticationStatus status;
+  final authentication_repository.AuthenticationStatus status;
   final User _user;
 
   @override

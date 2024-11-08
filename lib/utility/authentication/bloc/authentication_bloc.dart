@@ -1,22 +1,23 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:authentication_repository/authentication_repository.dart';
+import 'package:authentication_repository/authentication_repository.dart' as authentication_repository;
 import 'package:chatify/service/error/custom_logger.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:user_repository/user_repository.dart' as user_repository;
 import 'package:equatable/equatable.dart';
+import 'package:chatify/model/chat/models.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final AuthenticationRepository _authenticationRepository;
-  final UserRepository _userRepository;
+  final authentication_repository.AuthenticationRepository _authenticationRepository;
+  final user_repository.UserRepository _userRepository;
 
   AuthenticationBloc({
-    required AuthenticationRepository authenticationRepository,
-    required UserRepository userRepository,
+    required authentication_repository.AuthenticationRepository authenticationRepository,
+    required user_repository.UserRepository userRepository,
   })  : _authenticationRepository = authenticationRepository,
         _userRepository = userRepository,
         super(AuthenticationState.unknown()) {
@@ -57,9 +58,9 @@ class AuthenticationBloc
       _authenticationRepository.status,
       onData: (data) async {
         switch (data) {
-          case AuthenticationStatus.unauthenticated:
+          case authentication_repository.AuthenticationStatus.unauthenticated:
             return emit(AuthenticationState.unauthenticated());
-          case AuthenticationStatus.authenticated:
+          case authentication_repository.AuthenticationStatus.authenticated:
             // final user = await _tryGetUser();
             // if (user != null) {
             //   return emit(AuthenticationState.authenticated(value));
@@ -73,7 +74,7 @@ class AuthenticationBloc
                 return emit(AuthenticationState.unauthenticated());
               }
             });
-          case AuthenticationStatus.unknown:
+          case authentication_repository.AuthenticationStatus.unknown:
             return emit(AuthenticationState.unknown());
         }
       },
@@ -92,8 +93,11 @@ class AuthenticationBloc
 
   Future<User?> _tryGetUser() async {
     try {
-      final user = await _userRepository.getUser();
-      return user;
+      user_repository.User? user = await _userRepository.getUser();
+      if (user != null) {
+        return User.fromUserRepositoryUser(user);
+      }
+      return null;
     } catch (_) {
       return null;
     }

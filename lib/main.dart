@@ -1,10 +1,10 @@
-import 'package:authentication_repository/authentication_repository.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:authentication_repository/authentication_repository.dart' as authentication_repository;
+import 'package:user_repository/user_repository.dart' as user_repository;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chatify/utility/splash/spalsh.dart';
 import 'package:chatify/utility/authentication/authentication.dart';
-import 'package:chat_repository/chat_repository.dart';
+import 'package:chat_repository/chat_repository.dart' as chat_repository;
 
 import 'utility/home/view/home_page.dart';
 import 'utility/login/view/login_page.dart';
@@ -22,16 +22,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final AuthenticationRepository _authenticationRepository;
-  late final UserRepository _userRepository;
-  late final ChatRepository _chatRepository;
+  late final authentication_repository.AuthenticationRepository _authenticationRepository;
+  late final user_repository.UserRepository _userRepository;
+  late final chat_repository.ChatRepository _chatRepository;
 
   @override
   void initState() {
     super.initState();
-    _authenticationRepository = AuthenticationRepository();
-    _userRepository = UserRepository();
-    _chatRepository = ChatRepository();
+    _authenticationRepository = authentication_repository.AuthenticationRepository();
+    _userRepository = user_repository.UserRepository();
+    _chatRepository = chat_repository.ChatRepository();
   }
 
   @override
@@ -46,9 +46,9 @@ class _MyAppState extends State<MyApp> {
     return MultiRepositoryProvider(
       // value: _authenticationRepository,
       providers: [
-        RepositoryProvider.value(value: _authenticationRepository),
-        RepositoryProvider.value(value: _userRepository),
-        RepositoryProvider.value(value: _chatRepository),
+        RepositoryProvider<authentication_repository.AuthenticationRepository>.value(value: _authenticationRepository),
+        RepositoryProvider<user_repository.UserRepository>.value(value: _userRepository),
+        RepositoryProvider<chat_repository.ChatRepository>.value(value: _chatRepository),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -86,15 +86,15 @@ class _MyAppViewState extends State<MyAppView> {
         return BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             switch (state.status) {
-              case AuthenticationStatus.authenticated:
+              case authentication_repository.AuthenticationStatus.authenticated:
                 _navigator.pushAndRemoveUntil<void>(
                   HomePage.route(),
                   (route) => false,
                 );
                 break;
-              case AuthenticationStatus.unknown:
+              case authentication_repository.AuthenticationStatus.unknown:
                 break;
-              case AuthenticationStatus.unauthenticated:
+              case authentication_repository.AuthenticationStatus.unauthenticated:
                 _navigator.pushAndRemoveUntil<void>(
                   LoginPage.route(),
                   (route) => false,

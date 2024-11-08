@@ -27,17 +27,31 @@ class MessageStatus {
       : sendMessageStatusType = SendMessageStatusType.none,
         receiveMessageStatusType = ReceiveMessageStatusType.none;
 
-  static SendMessageStatusType chatRepositorySendMessageStatusType(chat_repository.SendMessageStatusType type) {
+  static SendMessageStatusType fromChatRepositorySendMessageStatusType(chat_repository.SendMessageStatusType type) {
     if (SendMessageStatusType.values.any((element) => element.name.compareTo(type.name) == 0)) {
       return SendMessageStatusType.values.firstWhere((element) => element.name.compareTo(type.name) == 0);
     }
     return SendMessageStatusType.none;
   }
 
-  static ReceiveMessageStatusType chatRepositoryReceiveMessageStatusType(chat_repository.ReceiveMessageStatusType type) {
+  static chat_repository.SendMessageStatusType toChatRepositorySendMessageStatusType(SendMessageStatusType type) {
+    if (chat_repository.SendMessageStatusType.values.any((element) => element.name.compareTo(type.name) == 0)) {
+      return chat_repository.SendMessageStatusType.values.firstWhere((element) => element.name.compareTo(type.name) == 0);
+    }
+    return chat_repository.SendMessageStatusType.none;
+  }
+
+  static ReceiveMessageStatusType fromChatRepositoryReceiveMessageStatusType(chat_repository.ReceiveMessageStatusType type) {
     if (ReceiveMessageStatusType.values.any((element) => element.name.compareTo(type.name) == 0)) {
       return ReceiveMessageStatusType.values.firstWhere((element) => element.name.compareTo(type.name) == 0);
     }
     return ReceiveMessageStatusType.none;
+  }
+
+  static chat_repository.ReceiveMessageStatusType toChatRepositoryReceiveMessageStatusType(ReceiveMessageStatusType type) {
+    if (chat_repository.ReceiveMessageStatusType.values.any((element) => element.name.compareTo(type.name) == 0)) {
+      return chat_repository.ReceiveMessageStatusType.values.firstWhere((element) => element.name.compareTo(type.name) == 0);
+    }
+    return chat_repository.ReceiveMessageStatusType.none;
   }
 }

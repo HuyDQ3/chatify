@@ -1,6 +1,6 @@
-import 'package:chatify/package/chat_repository/lib/chat_repository.dart'
+import 'package:chat_repository/chat_repository.dart'
     as chat_repository;
-import 'package:chatify/package/user_repository/lib/user_repository.dart'
+import 'package:user_repository/user_repository.dart'
     as user_repository;
 import 'package:chatify/utility/chat_page/bloc/chat_bloc.dart';
 import 'package:chatify/utility/login/login.dart';
@@ -30,7 +30,7 @@ class _ConversationPageState extends State<ConversationPage> {
   Widget build(BuildContext context) {
     User? user;
     if (context.read<user_repository.UserRepository>().user != null) {
-      user = User.userRepositoryUser(
+      user = User.fromUserRepositoryUser(
           context.read<user_repository.UserRepository>().user!);
     }
 

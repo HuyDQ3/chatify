@@ -31,35 +31,35 @@ class User extends Equatable {
     return this.id.compareTo(id) == 0;
   }
 
-  static User chatRepositoryUser(chat_repository.User user) {
-    // if (user != null) {
-    //   return User(
-    //     id: user.id,
-    //     loginInfo: LoginInfo.chatRepositoryLoginInfo(user.loginInfo),
-    //     personalInfo: PersonalInfo.chatRepositoryPersonalInfo(user.personalInfo),
-    //   );
-    // }
-    // return null;
+  static User fromChatRepositoryUser(chat_repository.User user) {
     return User(
       id: user.id,
-      loginInfo: LoginInfo.chatRepositoryLoginInfo(user.loginInfo),
-      personalInfo: PersonalInfo.chatRepositoryPersonalInfo(user.personalInfo),
+      loginInfo: LoginInfo.fromChatRepositoryLoginInfo(user.loginInfo),
+      personalInfo: PersonalInfo.fromChatRepositoryPersonalInfo(user.personalInfo),
     );
   }
 
-  static User userRepositoryUser(user_repository.User user) {
-    // if (user != null) {
-    //   return User(
-    //     id: user.id,
-    //     loginInfo: LoginInfo.userRepositoryLoginInfo(user.loginInfo),
-    //     personalInfo: PersonalInfo.userRepositoryPersonalInfo(user.personalInfo),
-    //   );
-    // }
-    // return null;
+  static chat_repository.User toChatRepositoryUser(User user) {
+    return chat_repository.User(
+      id: user.id,
+      loginInfo: LoginInfo.toChatRepositoryLoginInfo(user.loginInfo),
+      personalInfo: PersonalInfo.toChatRepositoryPersonalInfo(user.personalInfo),
+    );
+  }
+
+  static User fromUserRepositoryUser(user_repository.User user) {
     return User(
       id: user.id,
-      loginInfo: LoginInfo.userRepositoryLoginInfo(user.loginInfo),
-      personalInfo: PersonalInfo.userRepositoryPersonalInfo(user.personalInfo),
+      loginInfo: LoginInfo.fromUserRepositoryLoginInfo(user.loginInfo),
+      personalInfo: PersonalInfo.fromUserRepositoryPersonalInfo(user.personalInfo),
+    );
+  }
+
+  static user_repository.User toUserRepositoryUser(User user) {
+    return user_repository.User(
+      id: user.id,
+      loginInfo: LoginInfo.toUserRepositoryLoginInfo(user.loginInfo),
+      personalInfo: PersonalInfo.toUserRepositoryPersonalInfo(user.personalInfo),
     );
   }
 }

@@ -46,16 +46,24 @@ class Conversation extends Equatable {
   @override
   List<Object?> get props => [id, type, members, nearestMessage, title];
 
-  static Conversation chatRepositoryConversation(
+  static Conversation fromChatRepositoryConversation(
       chat_repository.Conversation conversation) {
     return Conversation(
       id: conversation.id,
-      type: chatRepositoryConversationType(conversation.type),
-      members: chatRepositoryMember(conversation.members),
+      type: fromChatRepositoryConversationType(conversation.type),
+      members: fromChatRepositoryMember(conversation.members),
     );
   }
 
-  static ConversationType chatRepositoryConversationType(
+  static chat_repository.Conversation toChatRepositoryConversation(Conversation conversation) {
+    return chat_repository.Conversation(
+      id: conversation.id,
+      type: toChatRepositoryConversationType(conversation.type),
+      members: toChatRepositoryMember(conversation.members),
+    );
+  }
+
+  static ConversationType fromChatRepositoryConversationType(
       chat_repository.ConversationType type) {
     if (ConversationType.values
         .any((element) => element.name.compareTo(type.name) == 0)) {
@@ -65,9 +73,24 @@ class Conversation extends Equatable {
     return ConversationType.normal;
   }
 
-  static List<User> chatRepositoryMember(List<chat_repository.User> members) {
+  static chat_repository.ConversationType toChatRepositoryConversationType(
+      ConversationType type) {
+    if (chat_repository.ConversationType.values
+        .any((element) => element.name.compareTo(type.name) == 0)) {
+      return chat_repository.ConversationType.values
+          .firstWhere((element) => element.name.compareTo(type.name) == 0);
+    }
+    return chat_repository.ConversationType.normal;
+  }
+
+  static List<User> fromChatRepositoryMember(List<chat_repository.User> members) {
     return List.generate(members.length,
-        (index) => User.chatRepositoryUser(members.elementAt(index)));
+        (index) => User.fromChatRepositoryUser(members.elementAt(index)));
+  }
+
+  static List<chat_repository.User> toChatRepositoryMember(List<User> members) {
+    return List.generate(members.length,
+            (index) => User.toChatRepositoryUser(members.elementAt(index)));
   }
 
   String getConversationTitle() {

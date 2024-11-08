@@ -3,8 +3,8 @@ import 'package:chatify/utility/login/bloc/login_bloc.dart';
 import 'package:chatify/utility/login/view/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:authentication_repository/authentication_repository.dart';
-import 'package:chat_repository/chat_repository.dart';
+import 'package:authentication_repository/authentication_repository.dart' as authentication_repository;
+import 'package:chat_repository/chat_repository.dart' as chat_repository;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,12 +24,12 @@ class _LoginPageState extends State<LoginPage> {
       providers: [
         BlocProvider(
           create: (context) => LoginBloc(
-            authenticationRepository: context.read<AuthenticationRepository>(),
+            authenticationRepository: context.read<authentication_repository.AuthenticationRepository>(),
           ),
         ),
         BlocProvider(
           create: (context) => ChatBloc(
-            chatRepository: context.read<ChatRepository>(),
+            chatRepository: context.read<chat_repository.ChatRepository>(),
           ),
         ),
       ],
