@@ -4,6 +4,7 @@ class AuthenticationState extends Equatable {
   AuthenticationState._({
     this.status = authentication_repository.AuthenticationStatus.unknown,
     User? user,
+  // }) : _user = user ?? User.fromUserRepositoryUser(user_repository.User.test());
   }) : _user = user ?? User.fromUserRepositoryUser(user_repository.User.test());
 
   AuthenticationState.unknown() : this._();

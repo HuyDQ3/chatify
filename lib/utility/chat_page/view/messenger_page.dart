@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:chat_repository/chat_repository.dart' as chat_repository;
 import 'package:user_repository/user_repository.dart' as user_repository;
+import 'package:authentication_repository/authentication_repository.dart' as authentication_repository;
 
 class MessengerPage extends StatefulWidget {
   const MessengerPage({super.key});
@@ -20,8 +21,30 @@ class MessengerPage extends StatefulWidget {
 }
 
 class _MessengerPageState extends State<MessengerPage> {
+  late chat_repository.ChatRepository chatRepository;
+  late authentication_repository.AuthenticationRepository authenticationRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    chatRepository = context.read<chat_repository.ChatRepository>();
+    authenticationRepository = context.read<authentication_repository.AuthenticationRepository>();
+  }
+
   @override
   Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => LoginBloc(
+              authenticationRepository: authenticationRepository),
+        ),
+        BlocProvider(
+            create: (context) => ChatBloc(chatRepository: chatRepository)),
+      ],
+      child: const MessengerForm(),
+    );
+
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(

@@ -3,6 +3,7 @@ import 'package:chatify/utility/login/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:authentication_repository/authentication_repository.dart' as authentication_repository;
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -13,16 +14,33 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   var formKey = GlobalKey<FormState>();
-  var accountController = TextEditingController(text: "huy");
-  var passwordController = TextEditingController(text: "huy123");
+  var usernameController = TextEditingController();
+  var passwordController = TextEditingController();
   var isShowPassword = ValueNotifier<bool>(false);
   var isLoginLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // usernameController.text = authentication_repository.LoginInfo.huy().username;
+    // passwordController.text = authentication_repository.LoginInfo.huy().password;
+  }
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: BlocListener<LoginBloc, LoginState>(
+          listenWhen: (previous, current) {
+            return previous.status != current.status;
+          },
           listener: (context, state) {
             if (state.status.isFailure) {
               var snackBar = const SnackBar(
@@ -41,8 +59,8 @@ class _LoginFormState extends State<LoginForm> {
               border: Border.all(),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: const Padding(
-              padding: EdgeInsets.all(16),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
                   Expanded(
@@ -50,13 +68,13 @@ class _LoginFormState extends State<LoginForm> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         // Flexible(child: Text(TextConstant.login)),
-                        Text(TextConstant.login),
+                        const Text(TextConstant.login),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _UsernameInput(),
-                            SizedBox(height: 16),
-                            _PasswordInput(),
+                            _UsernameInput(controller: usernameController),
+                            const SizedBox(height: 16),
+                            _PasswordInput(controller: passwordController),
                           ],
                         ),
                         // Expanded(
@@ -72,10 +90,10 @@ class _LoginFormState extends State<LoginForm> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 16),
-                  _LoginButton(),
-                  SizedBox(height: 16),
-                  _RegisterTitle(),
+                  const SizedBox(height: 16),
+                  const _LoginButton(),
+                  const SizedBox(height: 16),
+                  const _RegisterTitle(),
                 ],
               ),
             ),
@@ -345,7 +363,7 @@ class _PasswordInput extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                if (isPasswordShow) {
+                if (!isPasswordShow) {
                   context
                       .read<LoginBloc>()
                       .add(LoginPasswordTextFieldShowed());
@@ -500,22 +518,24 @@ class _LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final isInProcessOrSuccess = context.select(
             (LoginBloc bloc) => bloc.state.status.isInProgressOrSuccess);
-    final isValid = context.select((LoginBloc bloc) => bloc.state.isValid);
+    // final isValid = context.select((LoginBloc bloc) => bloc.state.isValid);
+    // Widget loginIcon;
+    // void Function()? login;
     Widget loginIcon;
-    void Function()? login;
-    loginIcon = const Icon(Icons.login);
-    login = () {
-      if (isValid) {
-        context.read<LoginBloc>().add(LoginSubmitted());
-      }
-    };
+    if (isInProcessOrSuccess) {
+      loginIcon = Transform.scale(scale: .5, child: const CircularProgressIndicator());
+    } else {
+      loginIcon = const Icon(Icons.login);
+    }
 
     return Material(
       color: Colors.transparent,
       shape: const CircleBorder(side: BorderSide()),
       child: InkWell(
         customBorder: const CircleBorder(),
-        onTap: login,
+        onTap: () {
+          context.read<LoginBloc>().add(LoginSubmitted());
+        },
         // onTap: () {
         //   if (!isLoginLoading &&
         //       formKey.currentState!.validate()) {
@@ -541,128 +561,128 @@ class _LoginButton extends StatelessWidget {
 
 
 
-    return Builder(
-      builder: (context) {
-
-
-        if (isInProcessOrSuccess) {
-          loginIcon = Transform.scale(
-            scale: .5,
-            child: const CircularProgressIndicator(),
-          );
-          login = null;
-        } else {
-          loginIcon = const Icon(Icons.login);
-          login = () {
-            if (isValid) {
-              context.read<LoginBloc>().add(LoginSubmitted());
-            }
-          };
-        }
-
-        // if (state is ChatifyLoginState &&
-        //     state.status == BlocStatusType.loading) {
-        //   isLoginLoading = true;
-        //   loginIcon = Transform.scale(
-        //       scale: .5,
-        //       child: const CircularProgressIndicator());
-        // } else {
-        //   isLoginLoading = false;
-        //   loginIcon = const Icon(Icons.login);
-        // }
-
-        return Material(
-          color: Colors.transparent,
-          shape: const CircleBorder(side: BorderSide()),
-          child: InkWell(
-            customBorder: const CircleBorder(),
-            onTap: login,
-            // onTap: () {
-            //   if (!isLoginLoading &&
-            //       formKey.currentState!.validate()) {
-            //     loginBloc?.add(ChatifyLoginEvent(
-            //         loginInfo: LoginInfo(
-            //           account: accountController.value.text,
-            //           password:
-            //           passwordController.value.text,
-            //         )));
-            //   }
-            // },
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border(),
-              ),
-              child: loginIcon,
-            ),
-          ),
-        );
-      },
-    );
-    return const Placeholder();
-    // BlocConsumer(
-    //   bloc: loginBloc,
-    //   listener: (context, state) {
-    //     if (state is ChatifyLoginState &&
-    //         state.status == BlocStatusType.failure) {
-    //       var snackBar = SnackBar(
-    //           duration: const Duration(seconds: 1),
-    //           content: Text(state.error ??
-    //               TextConstant
-    //                   .errorHappenedTryAgainLater));
-    //       ScaffoldMessenger.of(context)
-    //           .showSnackBar(snackBar);
-    //     }
-    //     if (state is ChatifyLoginState &&
-    //         state.status == BlocStatusType.success) {
-    //       customNavigator.push(
-    //         context,
-    //         const HomePageScreen(),
-    //       );
-    //     }
-    //   },
-    //   builder: (context, state) {
-    //     Widget loginIcon;
-    //     if (state is ChatifyLoginState &&
-    //         state.status == BlocStatusType.loading) {
-    //       isLoginLoading = true;
+    // return Builder(
+    //   builder: (context) {
+    //
+    //
+    //     if (isInProcessOrSuccess) {
     //       loginIcon = Transform.scale(
-    //           scale: .5,
-    //           child: const CircularProgressIndicator());
+    //         scale: .5,
+    //         child: const CircularProgressIndicator(),
+    //       );
+    //       login = null;
     //     } else {
-    //       isLoginLoading = false;
     //       loginIcon = const Icon(Icons.login);
+    //       login = () {
+    //         if (isValid) {
+    //           context.read<LoginBloc>().add(LoginSubmitted());
+    //         }
+    //       };
     //     }
+    //
+    //     // if (state is ChatifyLoginState &&
+    //     //     state.status == BlocStatusType.loading) {
+    //     //   isLoginLoading = true;
+    //     //   loginIcon = Transform.scale(
+    //     //       scale: .5,
+    //     //       child: const CircularProgressIndicator());
+    //     // } else {
+    //     //   isLoginLoading = false;
+    //     //   loginIcon = const Icon(Icons.login);
+    //     // }
+    //
     //     return Material(
     //       color: Colors.transparent,
     //       shape: const CircleBorder(side: BorderSide()),
     //       child: InkWell(
     //         customBorder: const CircleBorder(),
-    //         onTap: () {
-    //           if (!isLoginLoading &&
-    //               formKey.currentState!.validate()) {
-    //             loginBloc?.add(ChatifyLoginEvent(
-    //                 loginInfo: LoginInfo(
-    //                   account: accountController.value.text,
-    //                   password:
-    //                   passwordController.value.text,
-    //                 )));
-    //           }
-    //         },
+    //         onTap: login,
+    //         // onTap: () {
+    //         //   if (!isLoginLoading &&
+    //         //       formKey.currentState!.validate()) {
+    //         //     loginBloc?.add(ChatifyLoginEvent(
+    //         //         loginInfo: LoginInfo(
+    //         //           account: accountController.value.text,
+    //         //           password:
+    //         //           passwordController.value.text,
+    //         //         )));
+    //         //   }
+    //         // },
     //         child: Container(
     //           width: 60,
     //           height: 60,
     //           decoration: const BoxDecoration(
-    //               shape: BoxShape.circle,
-    //               border: Border()),
+    //             shape: BoxShape.circle,
+    //             border: Border(),
+    //           ),
     //           child: loginIcon,
     //         ),
     //       ),
     //     );
     //   },
-    // ),
+    // );
+    // return const Placeholder();
+    // // BlocConsumer(
+    // //   bloc: loginBloc,
+    // //   listener: (context, state) {
+    // //     if (state is ChatifyLoginState &&
+    // //         state.status == BlocStatusType.failure) {
+    // //       var snackBar = SnackBar(
+    // //           duration: const Duration(seconds: 1),
+    // //           content: Text(state.error ??
+    // //               TextConstant
+    // //                   .errorHappenedTryAgainLater));
+    // //       ScaffoldMessenger.of(context)
+    // //           .showSnackBar(snackBar);
+    // //     }
+    // //     if (state is ChatifyLoginState &&
+    // //         state.status == BlocStatusType.success) {
+    // //       customNavigator.push(
+    // //         context,
+    // //         const HomePageScreen(),
+    // //       );
+    // //     }
+    // //   },
+    // //   builder: (context, state) {
+    // //     Widget loginIcon;
+    // //     if (state is ChatifyLoginState &&
+    // //         state.status == BlocStatusType.loading) {
+    // //       isLoginLoading = true;
+    // //       loginIcon = Transform.scale(
+    // //           scale: .5,
+    // //           child: const CircularProgressIndicator());
+    // //     } else {
+    // //       isLoginLoading = false;
+    // //       loginIcon = const Icon(Icons.login);
+    // //     }
+    // //     return Material(
+    // //       color: Colors.transparent,
+    // //       shape: const CircleBorder(side: BorderSide()),
+    // //       child: InkWell(
+    // //         customBorder: const CircleBorder(),
+    // //         onTap: () {
+    // //           if (!isLoginLoading &&
+    // //               formKey.currentState!.validate()) {
+    // //             loginBloc?.add(ChatifyLoginEvent(
+    // //                 loginInfo: LoginInfo(
+    // //                   account: accountController.value.text,
+    // //                   password:
+    // //                   passwordController.value.text,
+    // //                 )));
+    // //           }
+    // //         },
+    // //         child: Container(
+    // //           width: 60,
+    // //           height: 60,
+    // //           decoration: const BoxDecoration(
+    // //               shape: BoxShape.circle,
+    // //               border: Border()),
+    // //           child: loginIcon,
+    // //         ),
+    // //       ),
+    // //     );
+    // //   },
+    // // ),
   }
 }
 

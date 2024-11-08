@@ -26,6 +26,7 @@ class AuthenticationRepository {
           _controller.add(AuthenticationStatus.authenticated);
         } else {
           _controller.add(AuthenticationStatus.unauthenticated);
+          throw Exception("account is not exists");
         }
       },
     );

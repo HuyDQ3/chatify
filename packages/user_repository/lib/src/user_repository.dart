@@ -15,5 +15,5 @@ class UserRepository {
     );
   }
 
-  User? get user => user?.copyWith();
+  User? get user => _user?.copyWith();
 }

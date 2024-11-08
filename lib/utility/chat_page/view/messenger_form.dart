@@ -1,8 +1,6 @@
+import 'package:chat_repository/chat_repository.dart' as chat_repository;
 import 'package:chatify/constant/text/text_constant.dart';
-import 'package:chatify/model/chat/conversation.dart';
 import 'package:chatify/model/chat/models.dart';
-import 'package:chatify/package/chat_repository/lib/chat_repository.dart'
-as chat_repository;
 import 'package:chatify/utility/chat_page/bloc/chat_bloc.dart';
 import 'package:chatify/utility/login/login.dart';
 import 'package:flutter/material.dart';

@@ -39,11 +39,11 @@ dependencies:
   equatable: ^2.0.5
   flutter_bloc: ^8.1.6
   authentication_repository:
-    path: ./lib/package/authentication_repository
+    path: packages/authentication_repository
   user_repository:
-    path: ./lib/package/user_repository
+    path: packages/user_repository
   chat_repository:
-    path: ./lib/package/chat_repository
+    path: packages/chat_repository
   formz: ^0.7.0
   uuid: ^3.0.0
 #  data_class: any

@@ -54,11 +54,11 @@ class AuthenticationBloc
     //   emit(const AuthenticationState.unknown());
     // }
 
-    return emit.onEach(
+    return emit.onEach<authentication_repository.AuthenticationStatus>(
       _authenticationRepository.status,
       onData: (data) async {
         switch (data) {
-          case authentication_repository.AuthenticationStatus.unauthenticated:
+            case authentication_repository.AuthenticationStatus.unauthenticated:
             return emit(AuthenticationState.unauthenticated());
           case authentication_repository.AuthenticationStatus.authenticated:
             // final user = await _tryGetUser();

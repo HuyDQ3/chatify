@@ -13,7 +13,7 @@ class Conversation extends Equatable {
   ConversationType type;
   List<User> members;
   Messenger? nearestMessage;
-  late String? title;
+  String? title;
 
   Conversation({
     required this.id,

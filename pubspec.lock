@@ -36,7 +36,7 @@ packages:
   authentication_repository:
     dependency: "direct main"
     description:
-      path: "lib/package/authentication_repository"
+      path: "packages/authentication_repository"
       relative: true
     source: path
     version: "0.0.0"
@@ -75,7 +75,7 @@ packages:
   chat_repository:
     dependency: "direct main"
     description:
-      path: "lib/package/chat_repository"
+      path: "packages/chat_repository"
       relative: true
     source: path
     version: "0.0.0"
@@ -481,7 +481,7 @@ packages:
   user_repository:
     dependency: "direct main"
     description:
-      path: "lib/package/user_repository"
+      path: "packages/user_repository"
       relative: true
     source: path
     version: "0.0.0"

@@ -1,8 +1,7 @@
 import 'package:chatify/constant/text/text_constant.dart';
+import 'package:chatify/utility/chat_page/chat_page.dart';
 import 'package:chatify/utility/setting_page/setting_page.dart';
 import 'package:flutter/material.dart';
-
-import '../../chat_page/chat_page.dart';
 
 class HomeForm extends StatefulWidget {
   const HomeForm({super.key});

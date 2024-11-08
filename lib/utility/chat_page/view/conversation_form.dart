@@ -1,5 +1,7 @@
 import 'package:chatify/constant/text/text_constant.dart';
+import 'package:chatify/service/navigation/custom_navigation.dart';
 import 'package:chatify/utility/chat_page/bloc/chat_bloc.dart';
+import 'package:chatify/utility/chat_page/view/messenger_page.dart';
 import 'package:chatify/utility/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +28,7 @@ class _ConversationFormState extends State<ConversationForm> {
   late ChatBloc chatBloc;
   late LoginBloc loginBloc;
   User? user;
+  user_repository.UserRepository? userTest;
 
   @override
   void initState() {
@@ -33,8 +36,10 @@ class _ConversationFormState extends State<ConversationForm> {
     chatRepository = context.read<chat_repository.ChatRepository>();
     chatBloc = context.read<ChatBloc>();
     loginBloc = context.read<LoginBloc>();
+    userRepository = context.read<user_repository.UserRepository>();
     if (userRepository.user != null) {
       user = User.fromUserRepositoryUser(userRepository.user!);
+      chatBloc.add(ChatCrawled(user));
     }
   }
 
@@ -45,16 +50,12 @@ class _ConversationFormState extends State<ConversationForm> {
         title: const Text(TextConstant.chat),
         automaticallyImplyLeading: false,
       ),
-      body: BlocBuilder<ChatBloc, ChatState>(
-        // listener: (context, state) async {
-        //   if (state is GoToMessageScreenState &&
-        //       state.type == BlocStatusType.success && !isLoadingMessage) {
-        //     isLoadingMessage = true;
-        //     await customNavigator.push(context,
-        //         MessageScreen(chatifyConversation: state.conversation));
-        //     isLoadingMessage = false;
-        //   }
-        // },
+      body: BlocConsumer<ChatBloc, ChatState>(
+        listener: (context, state) async {
+          if (state is MessengerCrawlSuccess) {
+            customNavigator.push(context, const MessengerPage());
+          }
+        },
         // buildWhen: (previous, current) {
         //   return current is GetUserConversationsState;
         // },
@@ -134,24 +135,25 @@ class _ConversationFormState extends State<ConversationForm> {
   }
 
   Widget loadingConversationWidget() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          padding: const EdgeInsets.all(4),
-          child: const Center(
-            child: CircularProgressIndicator(),
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            // width: 64,
+            // height: 64,
+            // padding: const EdgeInsets.all(4),
+            child: const Center(child: CircularProgressIndicator()),
           ),
-        ),
-        TextButton(
-          onPressed: () {
-            chatBloc.add(ChatCrawled(user));
-          },
-          child: const Text(TextConstant.tryAgain),
-        ),
-      ],
+          const SizedBox.square(dimension: 8),
+          TextButton(
+            onPressed: () {
+              chatBloc.add(ChatCrawled(user));
+            },
+            child: const Text(TextConstant.tryAgain),
+          ),
+        ],
+      ),
     );
 
     return const Center(
@@ -160,38 +162,32 @@ class _ConversationFormState extends State<ConversationForm> {
   }
 
   Widget failureConversationWidget() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          padding: const EdgeInsets.all(4),
-          child: const Row(
-            children: [
-              Icon(Icons.error, size: 48),
-              SizedBox.square(dimension: 8),
-              Text(
-                TextConstant.errorHappenedTryAgainLater,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.error, size: 48),
+          const SizedBox.square(dimension: 8),
+          const Text(
+            TextConstant.errorHappenedTryAgainLater,
+            overflow: TextOverflow.ellipsis,
           ),
-        ),
-        TextButton(
-          onPressed: () {
-            chatBloc.add(ChatCrawled(user));
-          },
-          child: const Text(TextConstant.tryAgain),
-        ),
-      ],
+          const SizedBox.square(dimension: 8),
+          TextButton(
+            onPressed: () {
+              chatBloc.add(ChatCrawled(user));
+            },
+            child: const Text(TextConstant.tryAgain),
+          ),
+        ],
+      ),
     );
   }
 
   Widget emptyConversationWidget() {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.message, size: 48),
           const SizedBox.square(dimension: 8),
