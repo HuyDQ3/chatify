@@ -12,7 +12,7 @@ class Conversation extends Equatable {
   final String id;
   ConversationType type;
   List<User> members;
-  Messenger? nearestMessage;
+  ChatRepositoryMessage? nearestMessage;
   String? title;
 
   Conversation({

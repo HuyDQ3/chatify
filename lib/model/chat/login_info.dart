@@ -33,19 +33,19 @@ class LoginInfo extends Equatable {
     return chat_repository.LoginInfo(username: loginInfo.username, password: loginInfo.password);
   }
 
-  static LoginInfo fromUserRepositoryLoginInfo(user_repository.LoginInfo loginInfo) {
+  static LoginInfo fromUserRepositoryLoginInfo(user_repository.UserRepositoryLoginInfo loginInfo) {
     return LoginInfo(username: loginInfo.username, password: loginInfo.password);
   }
 
-  static user_repository.LoginInfo toUserRepositoryLoginInfo(LoginInfo loginInfo) {
-    return user_repository.LoginInfo(username: loginInfo.username, password: loginInfo.password);
+  static user_repository.UserRepositoryLoginInfo toUserRepositoryLoginInfo(LoginInfo loginInfo) {
+    return user_repository.UserRepositoryLoginInfo(username: loginInfo.username, password: loginInfo.password);
   }
 
-  static LoginInfo fromAuthenticationRepositoryLoginInfo(authentication_repository.LoginInfo loginInfo) {
+  static LoginInfo fromAuthenticationRepositoryLoginInfo(authentication_repository.AuthenticationRepositoryLoginInfo loginInfo) {
     return LoginInfo(username: loginInfo.username, password: loginInfo.password);
   }
 
-  static authentication_repository.LoginInfo toAuthenticationRepositoryLoginInfo(LoginInfo loginInfo) {
-    return authentication_repository.LoginInfo(username: loginInfo.username, password: loginInfo.password);
+  static authentication_repository.AuthenticationRepositoryLoginInfo toAuthenticationRepositoryLoginInfo(LoginInfo loginInfo) {
+    return authentication_repository.AuthenticationRepositoryLoginInfo(username: loginInfo.username, password: loginInfo.password);
   }
 }

@@ -1,26 +1,26 @@
 import 'package:equatable/equatable.dart';
 
-class PersonalInfo extends Equatable {
+class UserRepositoryPersonalInfo extends Equatable {
   String? name;
   String? phoneNumber;
   String? address;
   DateTime? dateOfBirth;
 
-  PersonalInfo({this.name, this.phoneNumber, this.address, this.dateOfBirth});
+  UserRepositoryPersonalInfo({this.name, this.phoneNumber, this.address, this.dateOfBirth});
 
-  PersonalInfo.huy()
+  UserRepositoryPersonalInfo.huy()
       : name = "diep quang huy",
         dateOfBirth = DateTime(1999, DateTime.may, 20),
         phoneNumber = "0942159066",
         address = "ha dong - ha noi";
 
-  PersonalInfo.nghia()
+  UserRepositoryPersonalInfo.nghia()
       : name = "nguyen tuan nghia",
         dateOfBirth = DateTime(1999, DateTime.january, 1),
         phoneNumber = "0912111222",
         address = "my dinh - ha noi";
 
-  PersonalInfo.test()
+  UserRepositoryPersonalInfo.test()
       : name = "test",
         dateOfBirth = DateTime(2024, DateTime.january, 1),
         phoneNumber = "0123456789",

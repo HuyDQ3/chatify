@@ -4,3 +4,4 @@ export 'user.dart';
 export 'message.dart';
 export 'message_status.dart';
 export 'conversation.dart';
+export 'message_content.dart';

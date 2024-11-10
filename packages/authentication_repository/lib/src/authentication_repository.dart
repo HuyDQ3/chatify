@@ -20,7 +20,7 @@ class AuthenticationRepository {
     await Future.delayed(
       const Duration(milliseconds: 300),
       () {
-        if (LoginInfo.getAll.any((element) =>
+        if (AuthenticationRepositoryLoginInfo.getAll.any((element) =>
             element.password.compareTo(password) == 0 &&
             element.username.compareTo(username) == 0)) {
           _controller.add(AuthenticationStatus.authenticated);

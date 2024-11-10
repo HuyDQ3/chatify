@@ -8,7 +8,7 @@ enum ReceiveMessageStatusType { none, initial, loading, success, failure }
 
 class MessageStatus {
   final Conversation? conversation;
-  final Messenger message;
+  final Message message;
   SendMessageStatusType sendMessageStatusType;
   ReceiveMessageStatusType receiveMessageStatusType;
 

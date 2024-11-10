@@ -4,7 +4,7 @@ import 'models.dart';
 
 enum MessageType { none, text, image, video }
 
-class Messenger extends Equatable {
+class ChatRepositoryMessage extends Equatable {
   final String id;
   final String conversationId;
   final String senderId;
@@ -12,11 +12,12 @@ class Messenger extends Equatable {
   final MessageType type;
   SendMessageStatusType sendMessageStatusType;
   ReceiveMessageStatusType receiveMessageStatusType;
-  final String? text;
-  final List<String>? imageLinks;
-  final List<String>? videoLinks;
+  // final String? text;
+  // final List<String>? imageLinks;
+  // final List<String>? videoLinks;
+  ChatRepositoryMessageContent content;
 
-  Messenger({
+  ChatRepositoryMessage({
     required this.id,
     required this.conversationId,
     required this.type,
@@ -24,82 +25,98 @@ class Messenger extends Equatable {
     // this.receiverId,
     required this.sendMessageStatusType,
     required this.receiveMessageStatusType,
-    this.text,
-    this.imageLinks,
-    this.videoLinks,
+    // this.text,
+    // this.imageLinks,
+    // this.videoLinks,
+    required this.content,
   });
 
-  Messenger.success({
+  ChatRepositoryMessage.success({
     required this.id,
     required this.conversationId,
     required this.type,
     required this.senderId,
     // this.receiverId,
-    this.text,
-    this.imageLinks,
-    this.videoLinks,
+    // this.text,
+    // this.imageLinks,
+    // this.videoLinks,
+    required this.content,
   })  : sendMessageStatusType = SendMessageStatusType.success,
         receiveMessageStatusType = ReceiveMessageStatusType.success;
 
-  static List<Messenger> getTest1Messengers() => [
-        Messenger.success(
+  ChatRepositoryMessage.none({
+    required this.id,
+    required this.conversationId,
+    required this.type,
+    required this.senderId,
+    // this.receiverId,
+    // this.text,
+    // this.imageLinks,
+    // this.videoLinks,
+    required this.content,
+  })  : sendMessageStatusType = SendMessageStatusType.none,
+        receiveMessageStatusType = ReceiveMessageStatusType.none;
+
+  static List<ChatRepositoryMessage> getTest1Messengers() => [
+        ChatRepositoryMessage.success(
           id: "mes11",
           type: MessageType.text,
           conversationId: Conversation.test1().id,
           senderId: User.huy().id,
-          text: "hello",
+          content: ChatRepositoryMessageContent(text: "hello"),
+          // text: "hello",
         ),
-        Messenger.success(
+        ChatRepositoryMessage.success(
           id: "mes12",
           type: MessageType.text,
-          conversationId: "conv1",
+          conversationId: Conversation.test1().id,
           senderId: User.nghia().id,
-          text: "hi",
+          content: ChatRepositoryMessageContent(text: "hi"),
         ),
-        Messenger.success(
+        ChatRepositoryMessage.success(
           id: "mes13",
           type: MessageType.text,
           conversationId: Conversation.test1().id,
           senderId: User.huy().id,
-          text: "how are you",
+          content: ChatRepositoryMessageContent(text: "how are you"),
         ),
-        Messenger.success(
+        ChatRepositoryMessage.success(
           id: "mes14",
           type: MessageType.text,
           conversationId: Conversation.test1().id,
           senderId: User.nghia().id,
-          text: "i am fine",
+          content: ChatRepositoryMessageContent(text: "i am fine"),
         ),
       ];
 
-  static List<Messenger> getTest2Messengers() => [
-        Messenger.success(
+  static List<ChatRepositoryMessage> getTest2Messengers() => [
+        ChatRepositoryMessage.success(
           id: "mes21",
           type: MessageType.text,
-          conversationId: Conversation.test1().id,
+          conversationId: Conversation.test2().id,
           senderId: User.huy().id,
-          text: "hello2",
+          content: ChatRepositoryMessageContent(text: "hello2"),
         ),
-        Messenger.success(
+        ChatRepositoryMessage.success(
           id: "mes22",
           type: MessageType.text,
-          conversationId: "conv1",
+          conversationId: Conversation.test2().id,
           senderId: User.nghia().id,
-          text: "hi2",
+          content: ChatRepositoryMessageContent(text: "hi2"),
         ),
-        Messenger.success(
+        ChatRepositoryMessage.success(
           id: "mes23",
           type: MessageType.text,
-          conversationId: Conversation.test1().id,
+          conversationId: Conversation.test2().id,
           senderId: User.huy().id,
-          text: "how are you2",
+          content: ChatRepositoryMessageContent(text: "how are you2"),
         ),
-        Messenger.success(
+        ChatRepositoryMessage.success(
           id: "mes24",
           type: MessageType.text,
-          conversationId: Conversation.test1().id,
+          conversationId: Conversation.test2().id,
           senderId: User.nghia().id,
-          text: "i am fine2",
+          content: ChatRepositoryMessageContent(text: "i am fine2"),
         ),
       ];
 
@@ -112,8 +129,9 @@ class Messenger extends Equatable {
         // receiverId,
         sendMessageStatusType,
         receiveMessageStatusType,
-        text,
-        imageLinks,
-        videoLinks
+        // text,
+        // imageLinks,
+        // videoLinks,
+        content,
       ];
 }

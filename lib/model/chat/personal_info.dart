@@ -50,7 +50,7 @@ class PersonalInfo extends Equatable {
     );
   }
 
-  static PersonalInfo fromUserRepositoryPersonalInfo(user_repository.PersonalInfo personalInfo) {
+  static PersonalInfo fromUserRepositoryPersonalInfo(user_repository.UserRepositoryPersonalInfo personalInfo) {
     return PersonalInfo(
       address: personalInfo.address,
       name: personalInfo.name,
@@ -59,8 +59,8 @@ class PersonalInfo extends Equatable {
     );
   }
 
-  static user_repository.PersonalInfo toUserRepositoryPersonalInfo(PersonalInfo personalInfo) {
-    return user_repository.PersonalInfo(
+  static user_repository.UserRepositoryPersonalInfo toUserRepositoryPersonalInfo(PersonalInfo personalInfo) {
+    return user_repository.UserRepositoryPersonalInfo(
       address: personalInfo.address,
       name: personalInfo.name,
       dateOfBirth: personalInfo.dateOfBirth,

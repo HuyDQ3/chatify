@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-class LoginInfo extends Equatable {
-  LoginInfo({required this.username, required this.password});
+class AuthenticationRepositoryLoginInfo extends Equatable {
+  AuthenticationRepositoryLoginInfo({required this.username, required this.password});
 
-  LoginInfo.huy() : username = "huy", password = "huy123";
+  AuthenticationRepositoryLoginInfo.huy() : username = "huy", password = "huy123";
 
-  LoginInfo.nghia() : username = "nghia", password = "nghia545";
+  AuthenticationRepositoryLoginInfo.nghia() : username = "nghia", password = "nghia545";
 
-  LoginInfo.test() : username = "test", password = "test";
+  AuthenticationRepositoryLoginInfo.test() : username = "test", password = "test";
 
   String username;
   String password;
@@ -15,9 +15,9 @@ class LoginInfo extends Equatable {
   @override
   List<Object?> get props => [username, password];
 
-  static List<LoginInfo> get getAll => [
-    LoginInfo.huy(),
-    LoginInfo.nghia(),
-    LoginInfo.test(),
+  static List<AuthenticationRepositoryLoginInfo> get getAll => [
+    AuthenticationRepositoryLoginInfo.huy(),
+    AuthenticationRepositoryLoginInfo.nghia(),
+    AuthenticationRepositoryLoginInfo.test(),
   ];
 }

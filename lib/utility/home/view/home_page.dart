@@ -1,4 +1,3 @@
-import 'package:chatify/utility/chat_page/bloc/chat_bloc.dart';
 import 'package:chatify/utility/home/home.dart';
 import 'package:chatify/utility/login/login.dart';
 import 'package:flutter/material.dart';
@@ -21,22 +20,22 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return const HomeForm();
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider(create: (context) => context.read<chat_repository.ChatRepository>()),
-        RepositoryProvider(
-            create: (context) => context.read<authentication_repository.AuthenticationRepository>),
-      ],
-      child: MultiBlocProvider(providers: [
-        BlocProvider(
-          create: (context) => LoginBloc(
-              authenticationRepository: context
-                  .read<authentication_repository.AuthenticationRepository>()),
-        ),
-        BlocProvider(
-            create: (context) => ChatBloc(
-                chatRepository: context.read<chat_repository.ChatRepository>())),
-      ], child: const HomeForm(),),
-    );
+    // return MultiRepositoryProvider(
+    //   providers: [
+    //     RepositoryProvider(create: (context) => context.read<chat_repository.ChatRepository>()),
+    //     RepositoryProvider(
+    //         create: (context) => context.read<authentication_repository.AuthenticationRepository>),
+    //   ],
+    //   child: MultiBlocProvider(providers: [
+    //     BlocProvider(
+    //       create: (context) => LoginBloc(
+    //           authenticationRepository: context
+    //               .read<authentication_repository.AuthenticationRepository>()),
+    //     ),
+    //     BlocProvider(
+    //         create: (context) => ChatBloc(
+    //             chatRepository: context.read<chat_repository.ChatRepository>())),
+    //   ], child: const HomeForm(),),
+    // );
   }
 }

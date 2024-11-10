@@ -47,7 +47,7 @@ class User extends Equatable {
     );
   }
 
-  static User fromUserRepositoryUser(user_repository.User user) {
+  static User fromUserRepositoryUser(user_repository.UserRepositoryUser user) {
     return User(
       id: user.id,
       loginInfo: LoginInfo.fromUserRepositoryLoginInfo(user.loginInfo),
@@ -55,8 +55,8 @@ class User extends Equatable {
     );
   }
 
-  static user_repository.User toUserRepositoryUser(User user) {
-    return user_repository.User(
+  static user_repository.UserRepositoryUser toUserRepositoryUser(User user) {
+    return user_repository.UserRepositoryUser(
       id: user.id,
       loginInfo: LoginInfo.toUserRepositoryLoginInfo(user.loginInfo),
       personalInfo: PersonalInfo.toUserRepositoryPersonalInfo(user.personalInfo),

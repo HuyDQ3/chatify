@@ -6,7 +6,7 @@ enum ReceiveMessageStatusType { none, initial, loading, success, failure }
 
 class MessageStatus {
   final Conversation? conversation;
-  final Messenger message;
+  final ChatRepositoryMessage message;
   SendMessageStatusType sendMessageStatusType;
   ReceiveMessageStatusType receiveMessageStatusType;
 

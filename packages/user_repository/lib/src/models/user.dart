@@ -3,27 +3,27 @@ import 'package:uuid/uuid.dart';
 
 import 'models.dart';
 
-class User extends Equatable {
+class UserRepositoryUser extends Equatable {
   String id;
-  LoginInfo loginInfo;
-  PersonalInfo personalInfo;
+  UserRepositoryLoginInfo loginInfo;
+  UserRepositoryPersonalInfo personalInfo;
 
-  User({required this.id, required this.loginInfo, required this.personalInfo});
+  UserRepositoryUser({required this.id, required this.loginInfo, required this.personalInfo});
 
-  User.huy()
+  UserRepositoryUser.huy()
       : id = "huyID",
-        loginInfo = LoginInfo.huy(),
-        personalInfo = PersonalInfo.huy();
+        loginInfo = UserRepositoryLoginInfo.huy(),
+        personalInfo = UserRepositoryPersonalInfo.huy();
 
-  User.nghia()
+  UserRepositoryUser.nghia()
       : id = "nghiaID",
-        loginInfo = LoginInfo.nghia(),
-        personalInfo = PersonalInfo.nghia();
+        loginInfo = UserRepositoryLoginInfo.nghia(),
+        personalInfo = UserRepositoryPersonalInfo.nghia();
 
-  User.test()
+  UserRepositoryUser.test()
       : id = "test",
-        loginInfo = LoginInfo.test(),
-        personalInfo = PersonalInfo.test();
+        loginInfo = UserRepositoryLoginInfo.test(),
+        personalInfo = UserRepositoryPersonalInfo.test();
 
   @override
   List<Object?> get props => [id, loginInfo, personalInfo];
@@ -32,12 +32,12 @@ class User extends Equatable {
     return this.id.compareTo(id) == 0;
   }
 
-  User copyWith({
+  UserRepositoryUser copyWith({
     String? id,
-    PersonalInfo? personalInfo,
-    LoginInfo? loginInfo,
+    UserRepositoryPersonalInfo? personalInfo,
+    UserRepositoryLoginInfo? loginInfo,
   }) {
-    return User(
+    return UserRepositoryUser(
       id: id ?? this.id,
       personalInfo: personalInfo ?? this.personalInfo,
       loginInfo: loginInfo ?? this.loginInfo,
