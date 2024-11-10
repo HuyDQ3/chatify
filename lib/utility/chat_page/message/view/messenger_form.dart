@@ -1,6 +1,7 @@
 import 'package:chat_repository/chat_repository.dart' as chat_repository;
 import 'package:chatify/constant/text/text_constant.dart';
 import 'package:chatify/model/chat/models.dart';
+import 'package:chatify/service/error/custom_logger.dart';
 import 'package:chatify/utility/chat_page/message/bloc/message_bloc.dart';
 import 'package:chatify/utility/login/login.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class MessengerForm extends StatefulWidget {
 }
 
 class _MessengerFormState extends State<MessengerForm> {
-  late MessageBloc chatBloc;
+  late MessageBloc messageBloc;
 
   // late String title;
   TextEditingController inputBarController = TextEditingController();
@@ -36,7 +37,7 @@ class _MessengerFormState extends State<MessengerForm> {
     //       ChatifyConversation.copyWith(conversation!);
     // }
     // title = conversation?.title ?? TextConstant.conversation;
-    chatBloc = context.read<MessageBloc>();
+    messageBloc = context.read<MessageBloc>();
     // if (chatRepository.currentConversation != null) {
     //   conversation = Conversation.fromChatRepositoryConversation(
     //       chatRepository.currentConversation!);
@@ -58,21 +59,43 @@ class _MessengerFormState extends State<MessengerForm> {
       ),
       body: Column(
         children: [
-          Expanded(child: BlocBuilder<MessageBloc, MessageState>(
-            builder: (context, state) {
-              if (chatBloc.chatRepository.currentConversation == null) {
-                return emptyMessage();
-              }
-              if (state is MessageLoadSuccess && state.messages.isNotEmpty) {
-                return listOfMessages(
-                  Conversation.fromChatRepositoryConversation(
-                      chatBloc.chatRepository.currentConversation!),
-                  state.messages,
-                );
-              }
-              return emptyMessage();
-            },
-          )),
+          Expanded(
+            child: BlocConsumer<MessageBloc, MessageState>(
+              listener: (context, state) {
+                if (state is MessageReceiveSuccess) {
+                  logger.log(error: "received message");
+                }
+              },
+
+              builder: (context, state) {
+                if (messageBloc.chatRepository.currentConversation == null) {
+                  return empty();
+                }
+                if (state is MessageLoadSuccess && state.messages.isNotEmpty) {
+                  return listOfMessages(
+                    Conversation.fromChatRepositoryConversation(
+                        messageBloc.chatRepository.currentConversation!),
+                    state.messages,
+                  );
+                }
+                if (state is MessageLoadSuccess && state.messages.isEmpty) {
+                  return empty();
+                }
+                if (state is MessageReceiveSuccess &&
+                    state.messages.isNotEmpty) {
+                  return listOfMessages(
+                    Conversation.fromChatRepositoryConversation(
+                        messageBloc.chatRepository.currentConversation!),
+                    state.messages,
+                  );
+                }
+                if (state is MessageReceiveSuccess && state.messages.isEmpty) {
+                  return empty();
+                }
+                return loading();
+              },
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Row(
@@ -112,15 +135,15 @@ class _MessengerFormState extends State<MessengerForm> {
   }
 
   void sendMessage() {
-    if (chatBloc.chatRepository.currentConversation != null &&
-        chatBloc.userRepository.user != null &&
+    if (messageBloc.chatRepository.currentConversation != null &&
+        messageBloc.userRepository.user != null &&
         inputBarController.value.text.isNotEmpty) {
       var messageContent = MessageContent(
         text: inputBarController.value.text,
       );
-      chatBloc.add(MessageSent(
-        senderId: chatBloc.userRepository.user!.id,
-        conversationId: chatBloc.chatRepository.currentConversation!.id,
+      messageBloc.add(MessageSent(
+        senderId: messageBloc.userRepository.user!.id,
+        conversationId: messageBloc.chatRepository.currentConversation!.id,
         content: messageContent,
       ));
     }
@@ -183,16 +206,11 @@ class _MessengerFormState extends State<MessengerForm> {
   }
 
   Widget listOfMessages(
-      Conversation currentConversation, List<Message> messengers) {
-    Iterable<Message> reversedMessages = messengers.reversed;
+      Conversation currentConversation, List<Message> messages) {
+    Iterable<Message> reversedMessages = messages.reversed;
     return ListView.builder(
       itemBuilder: (context, index) {
-        return messageItem(
-          reversedMessages.elementAt(index),
-          isCurrentLoginUser: currentConversation.id
-                  .compareTo(reversedMessages.elementAt(index).senderId) ==
-              0,
-        );
+        return messageItem(reversedMessages.elementAt(index));
       },
       // separatorBuilder: (context, index) {
       //   return SizedBox.square(dimension: 8,);
@@ -231,7 +249,7 @@ class _MessengerFormState extends State<MessengerForm> {
     // );
   }
 
-  Widget emptyMessage() {
+  Widget empty() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -252,10 +270,31 @@ class _MessengerFormState extends State<MessengerForm> {
     );
   }
 
+  Widget loading() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox.square(dimension: 8),
+          TextButton(
+            onPressed: () {},
+            child: const Text(TextConstant.tryAgain),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget? messageItem(Message message, {bool? isCurrentLoginUser}) {
-    if (isCurrentLoginUser ?? false) {
+    bool isCurrentLoginUser =
+        context.read<user_repository.UserRepository>().user?.id != null &&
+            message.senderId.compareTo(
+                    context.read<user_repository.UserRepository>().user!.id) ==
+                0;
+    if (isCurrentLoginUser) {
       return currentUserMessageItem(message);
-    } else if (!(isCurrentLoginUser ?? false)) {
+    } else {
       return otherUserMessageItem(message);
     }
     return null;
@@ -266,7 +305,7 @@ class _MessengerFormState extends State<MessengerForm> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          textBubbleMessage(message.content.text ?? ""),
+          currentUserTextBubbleMessage(message.content.text ?? ""),
         ],
       ),
       trailing: const CircleAvatar(
@@ -283,18 +322,35 @@ class _MessengerFormState extends State<MessengerForm> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          textBubbleMessage(message.content.text ?? ""),
+          otherUserTextBubbleMessage(message.content.text ?? ""),
         ],
       ),
     );
   }
 
-  Widget textBubbleMessage(String text) {
+  Widget otherUserTextBubbleMessage(String text) {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.blue,
+        boxShadow: [
+          BoxShadow(color: Colors.grey, blurRadius: 2, offset: Offset(0, 4)),
+        ],
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  Widget currentUserTextBubbleMessage(String text) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.green,
         boxShadow: [
           BoxShadow(color: Colors.grey, blurRadius: 2, offset: Offset(0, 4)),
         ],

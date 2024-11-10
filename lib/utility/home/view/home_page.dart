@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:authentication_repository/authentication_repository.dart' as authentication_repository;
 import 'package:chat_repository/chat_repository.dart' as chat_repository;
+import 'package:user_repository/user_repository.dart' as user_repository;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,6 +18,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late authentication_repository.AuthenticationRepository authenticationRepository;
+  late chat_repository.ChatRepository chatRepository;
+  late user_repository.UserRepository userRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    authenticationRepository = context.read<authentication_repository.AuthenticationRepository>();
+    chatRepository = context.read<chat_repository.ChatRepository>();
+    userRepository = context.read<user_repository.UserRepository>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return const HomeForm();

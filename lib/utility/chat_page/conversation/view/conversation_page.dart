@@ -38,8 +38,9 @@ class _ConversationPageState extends State<ConversationPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ConversationBloc(
-          chatRepository: chatRepository, userRepository: userRepository)
-        ..add(ConversationStarted()),
+        chatRepository: chatRepository,
+        userRepository: userRepository,
+      )..add(ConversationStarted()),
       child: const ConversationForm(),
     );
     // return BlocProvider(

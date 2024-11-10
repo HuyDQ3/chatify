@@ -5,6 +5,7 @@ import 'package:chatify/service/error/custom_logger.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:authentication_repository/authentication_repository.dart' as authentication_repository;
+import 'package:user_repository/user_repository.dart' as user_repository;
 
 import '../login.dart';
 
@@ -13,10 +14,13 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final authentication_repository.AuthenticationRepository _authenticationRepository;
+  final user_repository.UserRepository _userRepository ;
 
   LoginBloc({
     required authentication_repository.AuthenticationRepository authenticationRepository,
+    required user_repository.UserRepository userRepository,
   })  : _authenticationRepository = authenticationRepository,
+  _userRepository = userRepository,
         super(const LoginState()) {
     on<LoginEvent>((event, emit) {});
 
@@ -81,6 +85,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           username: state.username.value,
           password: state.password.value,
         );
+        if (_authenticationRepository.currentLoginInfo != null && user_repository.UserRepositoryUser.getAll.any((element) => element.loginInfo.username.compareTo(_authenticationRepository.currentLoginInfo!.username) == 0 &&  element.loginInfo.password.compareTo(_authenticationRepository.currentLoginInfo!.password) == 0)) {
+          _userRepository.user = user_repository.UserRepositoryUser.getAll.firstWhere((element) => element.loginInfo.username.compareTo(_authenticationRepository.currentLoginInfo!.username) == 0 &&  element.loginInfo.password.compareTo(_authenticationRepository.currentLoginInfo!.password) == 0);
+        }
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       }
     } catch (e, s) {

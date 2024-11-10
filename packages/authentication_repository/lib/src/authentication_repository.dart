@@ -13,6 +13,8 @@ class AuthenticationRepository {
     yield* _controller.stream;
   }
 
+  AuthenticationRepositoryLoginInfo? currentLoginInfo;
+
   Future<void> logIn({
     required String username,
     required String password,
@@ -24,6 +26,9 @@ class AuthenticationRepository {
             element.password.compareTo(password) == 0 &&
             element.username.compareTo(username) == 0)) {
           _controller.add(AuthenticationStatus.authenticated);
+          currentLoginInfo = AuthenticationRepositoryLoginInfo.getAll.firstWhere((element) =>
+          element.password.compareTo(password) == 0 &&
+              element.username.compareTo(username) == 0);
         } else {
           _controller.add(AuthenticationStatus.unauthenticated);
           throw Exception("account is not exists");

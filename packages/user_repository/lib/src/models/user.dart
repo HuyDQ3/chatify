@@ -43,4 +43,10 @@ class UserRepositoryUser extends Equatable {
       loginInfo: loginInfo ?? this.loginInfo,
     );
   }
+
+  static List<UserRepositoryUser> get getAll => [
+    UserRepositoryUser.test(),
+    UserRepositoryUser.huy(),
+    UserRepositoryUser.nghia(),
+  ];
 }

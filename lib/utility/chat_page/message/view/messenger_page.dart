@@ -37,7 +37,7 @@ class _MessengerPageState extends State<MessengerPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (context) => MessageBloc(chatRepository: chatRepository, userRepository: userRepository)..add(MessageStarted())),
+            create: (context) => MessageBloc(chatRepository: chatRepository, userRepository: userRepository)..add(MessageStarted())..add(MessageReceived())),
       ],
       child: const MessengerForm(),
     );

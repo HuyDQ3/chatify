@@ -26,7 +26,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
 
   Future<void> _onEvent(
       ConversationEvent event, Emitter<ConversationState> emit) async {
-    logger.log(error: state.runtimeType.toString());
+    // logger.log(error: state.runtimeType.toString());
   }
 
   // Future<void> _onAdded(ConversationAdded event, Emitter<ConversationState> emit) async {
@@ -56,6 +56,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       ConversationTapped event, Emitter<ConversationState> emit) async {
     try {
       emit(ConversationTappedInProgress(event.conversation));
+      chatRepository.currentConversation = Conversation.toChatRepositoryConversation(event.conversation);
       emit(ConversationTappedSuccess(event.conversation));
     } catch (e, s) {
       logger.log(error: e, stackTrace: s);

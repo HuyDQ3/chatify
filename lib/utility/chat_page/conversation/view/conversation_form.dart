@@ -38,6 +38,9 @@ class _ConversationFormState extends State<ConversationForm> {
             customNavigator.push(context, const MessengerPage());
           }
         },
+        buildWhen: (previous, current) {
+          return current is ConversationLoadSuccess || current is ConversationLoadFailure;
+        },
         builder: (context, state) {
           if (state is ConversationLoadSuccess) {
             return conversations(state.conversations);

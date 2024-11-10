@@ -44,7 +44,7 @@ class _LoginFormState extends State<LoginForm> {
           listener: (context, state) {
             if (state.status.isFailure) {
               var snackBar = const SnackBar(
-                  duration: Duration(seconds: 1),
+                  duration: Duration(seconds: 2),
                   content: Text(TextConstant.errorHappenedTryAgainLater));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               ScaffoldMessenger.of(context)

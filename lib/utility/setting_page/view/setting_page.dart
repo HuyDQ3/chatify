@@ -3,6 +3,7 @@ import 'package:chatify/utility/login/login.dart';
 import 'package:chatify/utility/setting_page/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:user_repository/user_repository.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -20,7 +21,9 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LoginBloc(
-          authenticationRepository: context.read<AuthenticationRepository>()),
+        authenticationRepository: context.read<AuthenticationRepository>(),
+        userRepository: context.read<UserRepository>(),
+      ),
       child: const SettingForm(),
     );
   }

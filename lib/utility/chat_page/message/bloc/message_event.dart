@@ -19,3 +19,10 @@ class MessageSent extends MessageEvent {
   @override
   List<Object?> get props => [senderId, conversationId, content];
 }
+
+class MessageReceived extends MessageEvent {
+  const MessageReceived();
+
+  @override
+  List<Object?> get props => [];
+}

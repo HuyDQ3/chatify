@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:user_repository/src/models/models.dart';
 
 class UserRepository {
-  UserRepositoryUser? _user;
+  UserRepositoryUser? user;
 
   // Future<User?> getUser() async {
   //   return await Future.delayed(
@@ -14,5 +14,5 @@ class UserRepository {
   //   );
   // }
 
-  UserRepositoryUser? get user => _user?.copyWith();
+  // UserRepositoryUser? get user => _user?.copyWith();
 }

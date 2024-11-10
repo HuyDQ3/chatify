@@ -26,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
         BlocProvider(
           create: (context) => LoginBloc(
             authenticationRepository: context.read<authentication_repository.AuthenticationRepository>(),
+            userRepository: context.read<user_repository.UserRepository>(),
           ),
         ),
         BlocProvider(

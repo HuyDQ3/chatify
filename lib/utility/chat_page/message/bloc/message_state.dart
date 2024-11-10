@@ -50,28 +50,24 @@ final class MessageSendFailure extends MessageState {
 }
 
 final class MessageReceiveInProgress extends MessageState {
-  final Message message;
-
-  const MessageReceiveInProgress(this.message);
+  const MessageReceiveInProgress();
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [];
 }
 
 final class MessageReceiveSuccess extends MessageState {
-  final Message message;
+  final List<Message> messages;
 
-  const MessageReceiveSuccess(this.message);
+  const MessageReceiveSuccess(this.messages);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [messages];
 }
 
 final class MessageReceiveFailure extends MessageState {
-  final Message message;
-
-  const MessageReceiveFailure(this.message);
+  const MessageReceiveFailure();
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [];
 }

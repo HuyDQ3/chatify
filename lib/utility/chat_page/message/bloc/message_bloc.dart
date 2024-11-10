@@ -16,8 +16,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     on<MessageEvent>((event, emit) {
       // TODO: implement event handler
     });
+
     on<MessageStarted>(_onStarted);
+
     on<MessageSent>(_onSent);
+
+    on<MessageReceived>(_onReceived);
   }
 
   chat_repository.ChatRepository chatRepository;
@@ -27,10 +31,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       MessageStarted event, Emitter<MessageState> emit) async {
     try {
       emit(MessageLoadInProgress());
-      if (userRepository.user != null)
+      if (userRepository.user == null) {
         throw Exception("current account is null");
-      if (chatRepository.currentConversation == null)
+      }
+      if (chatRepository.currentConversation == null) {
         throw Exception("current conversation is null");
+      }
       await chatRepository.crawlChatTest(User.toChatRepositoryUser(
           User.fromUserRepositoryUser(userRepository.user!)));
       List<Message> messages =
@@ -57,5 +63,22 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       logger.log(error: e, stackTrace: s);
       emit(const MessageSendFailure());
     }
+  }
+
+  Future<void> _onReceived(MessageReceived event, Emitter<MessageState> emit) async {
+    return emit.onEach(
+      chatRepository.receivedMessage,
+      onData: (data) async {
+        List<Message> messages =
+        (await chatRepository.getMessagesFromCurrentConversation() ?? [])
+            .map<Message>((e) => Message.fromChatRepositoryMessenger(e))
+            .toList();
+        // return emit(MessageLoadSuccess(messages));
+        return emit(MessageReceiveSuccess(messages));
+      },
+      onError: (error, stackTrace) {
+        return emit(const MessageReceiveFailure());
+      },
+    );
   }
 }
